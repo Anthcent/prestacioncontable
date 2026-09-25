@@ -898,9 +898,6 @@ include 'includes/header.php';
                                     </button>
                                 </div>
                                 <input type="number" name="dias_vacaciones_alicuota" id="dias_vacaciones_alicuota" value="<?php echo $p['dias_vacaciones_alicuota']; ?>" class="w-full p-2 border border-slate-300 rounded-lg text-sm text-center font-bold">
-                                <div class="flex items-center justify-between mt-1 text-[10px] text-slate-400">
-                                    <span id="lbl_antig_vac_desc">Art. 190 y 192 LOTTT</span>
-                                </div>
                             </div>
 
                             <!-- Alícuota Diaria Vacaciones -->

@@ -156,10 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Actualizar badges e indicadores de días legales en la interfaz
         let lblVacSug = document.getElementById('lbl_dias_vac_sug');
         if (lblVacSug) lblVacSug.innerText = dias_vac_legales + 'd';
-        let lblAntigVacDesc = document.getElementById('lbl_antig_vac_desc');
-        if (lblAntigVacDesc) {
-            lblAntigVacDesc.innerText = '15d base + ' + dias_adicionales_vac + 'd antig.';
-        }
         let modalBtnDv = document.getElementById('modal_lbl_btn_dv');
         if (modalBtnDv) modalBtnDv.innerText = dias_vac_legales;
         let modalSugDvBtn = document.getElementById('modal_sug_dv_btn');

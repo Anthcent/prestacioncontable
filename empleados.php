@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_empleado'])) {
             if (isset($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
                 $error = "La cédula '{$cedula}' ya se encuentra registrada para otro trabajador.";
             } else {
-                $error = "Error al procesar el empleado: " . $e->getMessage();
+                $error = "Error al procesar el trabajador: " . $e->getMessage();
             }
         }
     }
@@ -144,7 +144,7 @@ include 'includes/header.php';
         </span>
     </div>
     <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-        <i class="fa-solid fa-address-book text-brand-blue"></i> Directorio de Empleados
+        <i class="fa-solid fa-address-book text-brand-blue"></i> Directorio de Trabajadores
     </h1>
     <p class="text-sm font-semibold text-slate-700 mt-1">
         Fichas laborales, clasificación de cargos, cálculo directo de liquidaciones y control de antigüedad
@@ -173,7 +173,7 @@ include 'includes/header.php';
         <div class="bg-rose-50 border-l-4 border-rose-500 text-rose-900 p-4 mb-5 rounded-r-xl shadow-sm flex items-center justify-between" role="alert">
             <div class="flex items-center gap-3 font-bold text-sm">
                 <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg"></i>
-                <span>El registro del empleado y sus liquidaciones asociadas fueron eliminados.</span>
+                <span>El registro del trabajador y sus liquidaciones asociadas fueron eliminados.</span>
             </div>
             <a href="empleados.php" class="text-rose-700 hover:text-rose-900 text-xs font-black uppercase">Descartar</a>
         </div>
@@ -214,7 +214,7 @@ include 'includes/header.php';
         <div class="min-w-0 flex-1">
             <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 truncate">Clasificación</p>
             <div class="flex items-center gap-1.5 mt-0.5 text-xs font-mono font-black">
-                <span class="text-blue-900"><?php echo $kpi_empleados; ?> <span class="text-[10px] font-bold text-slate-500 font-sans">Emp</span></span>
+                <span class="text-blue-900"><?php echo $kpi_empleados; ?> <span class="text-[10px] font-bold text-slate-500 font-sans">Trab.</span></span>
                 <span class="text-slate-300 font-normal">/</span>
                 <span class="text-amber-800"><?php echo $kpi_obreros; ?> <span class="text-[10px] font-bold text-slate-500 font-sans">Obr</span></span>
             </div>
@@ -270,9 +270,9 @@ include 'includes/header.php';
                 <i class="fa-solid fa-folder-open text-brand-blue"></i>
                 <span>Historial de Liquidaciones</span>
             </a>
-            <button onclick="openNewModal()" type="button" class="bg-brand-blue hover:bg-blue-900 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-all flex items-center gap-2 shadow-sm cursor-pointer" title="Registrar nuevo empleado">
+            <button onclick="openNewModal()" type="button" class="bg-brand-blue hover:bg-blue-900 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-all flex items-center gap-2 shadow-sm cursor-pointer" title="Registrar nuevo trabajador">
                 <i class="fa-solid fa-plus text-brand-yellow"></i>
-                <span>+ Nuevo Empleado</span>
+                <span>+ Nuevo Trabajador</span>
             </button>
         </div>
     </div>
@@ -290,7 +290,7 @@ include 'includes/header.php';
             <div class="w-auto min-w-[160px]">
                 <select name="categoria" onchange="this.form.submit()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-brand-blue transition-all cursor-pointer">
                     <option value="" <?php echo $categoria_filtro === '' ? 'selected' : ''; ?>>Todas las categorías</option>
-                    <option value="Empleado" <?php echo $categoria_filtro === 'Empleado' ? 'selected' : ''; ?>>Solo Empleados</option>
+                    <option value="Empleado" <?php echo $categoria_filtro === 'Empleado' ? 'selected' : ''; ?>>Solo Trabajadores</option>
                     <option value="Obrero" <?php echo $categoria_filtro === 'Obrero' ? 'selected' : ''; ?>>Solo Obreros</option>
                 </select>
             </div>
@@ -338,7 +338,7 @@ include 'includes/header.php';
             <thead>
                 <tr class="bg-slate-100 text-slate-900 text-xs font-black uppercase tracking-wider border-b-2 border-slate-300">
                     <th class="px-4 py-3.5 text-center w-12">N°</th>
-                    <th class="px-4 py-3.5">Empleado & Cédula</th>
+                    <th class="px-4 py-3.5">Trabajador & Cédula</th>
                     <th class="px-4 py-3.5">Cargo & Clasificación</th>
                     <th class="px-4 py-3.5 text-center">Categoría</th>
                     <th class="px-4 py-3.5 text-center">Fecha Ingreso & Antigüedad</th>
@@ -403,7 +403,7 @@ include 'includes/header.php';
                                 </span>
                             <?php elseif($emp['categoria'] === 'Empleado'): ?>
                                 <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-900 border border-blue-300">
-                                    Empleado
+                                    Trabajador
                                 </span>
                             <?php else: ?>
                                 <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold text-slate-500 bg-slate-100">
@@ -437,7 +437,7 @@ include 'includes/header.php';
                         <td class="px-4 py-3.5 text-center no-print whitespace-nowrap">
                             <div class="inline-flex items-center gap-1">
                                 <!-- Botón 1: Calcular Liquidación Directa -->
-                                <a href="prestaciones_form.php?empleado_id=<?php echo $emp['id']; ?>" class="bg-emerald-700 hover:bg-emerald-800 text-white px-2.5 py-1.5 rounded-lg font-extrabold text-xs transition-colors inline-flex items-center gap-1 shadow-xs" title="Iniciar cálculo de prestaciones para este empleado">
+                                <a href="prestaciones_form.php?empleado_id=<?php echo $emp['id']; ?>" class="bg-emerald-700 hover:bg-emerald-800 text-white px-2.5 py-1.5 rounded-lg font-extrabold text-xs transition-colors inline-flex items-center gap-1 shadow-xs" title="Iniciar cálculo de prestaciones para este trabajador">
                                     <i class="fa-solid fa-calculator text-xs"></i> Liquidar
                                 </a>
 
@@ -449,7 +449,7 @@ include 'includes/header.php';
                                 <?php endif; ?>
 
                                 <!-- Botón 3: Editar en Modal Wizard -->
-                                <button onclick='openEditModal(<?php echo htmlspecialchars(json_encode($emp), ENT_QUOTES, "UTF-8"); ?>)' type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center cursor-pointer" title="Editar empleado en Modal">
+                                <button onclick='openEditModal(<?php echo htmlspecialchars(json_encode($emp), ENT_QUOTES, "UTF-8"); ?>)' type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center cursor-pointer" title="Editar trabajador">
                                     <i class="fa-solid fa-pen text-xs"></i>
                                 </button>
 
@@ -470,12 +470,12 @@ include 'includes/header.php';
                                     <i class="fa-solid fa-users-slash"></i>
                                 </div>
                                 <h4 class="text-base font-black text-slate-900">
-                                    <?php echo (!empty($search) || !empty($categoria_filtro) || !empty($estado_filtro)) ? 'Sin coincidencias de búsqueda' : 'No hay empleados registrados'; ?>
+                                    <?php echo (!empty($search) || !empty($categoria_filtro) || !empty($estado_filtro)) ? 'Sin coincidencias de búsqueda' : 'No hay trabajadores registrados'; ?>
                                 </h4>
                                 <p class="text-xs font-semibold text-slate-700 text-center leading-relaxed">
                                     <?php echo (!empty($search) || !empty($categoria_filtro) || !empty($estado_filtro))
                                         ? 'Ningún trabajador coincide con los criterios de filtro aplicados. Pruebe cambiando los filtros.' 
-                                        : 'Aún no se han agregado empleados a la base de datos de la empresa. Puede registrar el primero con el asistente guiado.'; ?>
+                                        : 'Aún no se han agregado trabajadores a la base de datos de la empresa. Puede registrar el primero con el asistente guiado.'; ?>
                                 </p>
                                 <div class="flex items-center gap-2 mt-2">
                                     <?php if(!empty($search) || !empty($categoria_filtro) || !empty($estado_filtro)): ?>
@@ -484,7 +484,7 @@ include 'includes/header.php';
                                         </a>
                                     <?php endif; ?>
                                     <button onclick="openNewModal()" type="button" class="bg-brand-blue hover:bg-blue-900 text-white px-4 py-2 rounded-xl font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer">
-                                        <i class="fa-solid fa-plus"></i> Registrar Primer Empleado
+                                        <i class="fa-solid fa-plus"></i> Registrar Primer Trabajador
                                     </button>
                                 </div>
                             </div>
@@ -509,7 +509,7 @@ include 'includes/header.php';
                     <i id="modalHeaderIcon" class="fa-solid fa-user-plus"></i>
                 </div>
                 <div>
-                    <h3 id="modalTitle" class="font-black text-slate-900 text-base leading-tight">Registrar Nuevo Empleado</h3>
+                    <h3 id="modalTitle" class="font-black text-slate-900 text-base leading-tight">Registrar Nuevo Trabajador</h3>
                     <p class="text-[11px] font-semibold text-slate-500">Asistente guiado en 2 pasos rápidos</p>
                 </div>
             </div>
@@ -610,7 +610,7 @@ include 'includes/header.php';
                         </label>
                         <select name="categoria" id="emp_categoria" onchange="actualizarClasificacionLaboral()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-xs font-bold text-slate-900 transition-all cursor-pointer">
                             <option value="">-- No asignada --</option>
-                            <option value="Empleado">Empleado</option>
+                            <option value="Empleado">Trabajador</option>
                             <option value="Obrero">Obrero</option>
                         </select>
                     </div>
@@ -643,7 +643,7 @@ include 'includes/header.php';
                     </button>
                     <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-6 py-2.5 rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
                         <i class="fa-solid fa-floppy-disk text-xs"></i>
-                        <span id="btnSaveText">Guardar Empleado</span>
+                        <span id="btnSaveText">Guardar Trabajador</span>
                     </button>
                 </div>
             </div>
@@ -677,9 +677,9 @@ function openNewModal() {
     document.getElementById('emp_clase_cargo').value = '';
     document.getElementById('emp_nivel').value = '';
     
-    document.getElementById('modalTitle').innerText = 'Registrar Nuevo Empleado';
+    document.getElementById('modalTitle').innerText = 'Registrar Nuevo Trabajador';
     document.getElementById('modalHeaderIcon').className = 'fa-solid fa-user-plus';
-    document.getElementById('btnSaveText').innerText = 'Guardar Empleado';
+    document.getElementById('btnSaveText').innerText = 'Guardar Trabajador';
     actualizarClasificacionLaboral();
     
     goToStep(1);
@@ -697,7 +697,7 @@ function openEditModal(emp) {
     document.getElementById('emp_clase_cargo').value = emp.clase_cargo || '';
     document.getElementById('emp_nivel').value = emp.nivel || '';
     
-    document.getElementById('modalTitle').innerText = 'Editar Empleado: ' + (emp.apellidos_nombres || '');
+    document.getElementById('modalTitle').innerText = 'Editar Trabajador: ' + (emp.apellidos_nombres || '');
     document.getElementById('modalHeaderIcon').className = 'fa-solid fa-user-pen';
     document.getElementById('btnSaveText').innerText = 'Actualizar Datos';
     actualizarClasificacionLaboral();

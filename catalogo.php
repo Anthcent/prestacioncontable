@@ -61,7 +61,7 @@ include 'includes/header.php';
     <form method="GET" action="catalogo.php" class="flex flex-wrap sm:flex-nowrap gap-2 flex-1 w-full lg:max-w-md">
         <div class="relative w-full min-w-0 sm:flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
-            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Buscar por Cédula, Empleado o Cargo..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none text-sm">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Buscar por cédula, trabajador o cargo..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none text-sm">
         </div>
         <button type="submit" class="bg-brand-blue text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-800 transition-colors">Buscar</button>
         <?php if (!empty($search)): ?>
@@ -177,7 +177,7 @@ include 'includes/header.php';
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
                     <th class="px-5 py-3.5 font-bold">N° Liquidación</th>
                     <th class="px-5 py-3.5 font-bold">Cédula</th>
-                    <th class="px-5 py-3.5 font-bold">Empleado</th>
+                    <th class="px-5 py-3.5 font-bold">Trabajador</th>
                     <th class="px-5 py-3.5 font-bold">Cargo</th>
                     <th class="px-5 py-3.5 font-bold text-center">Regla</th>
                     <th class="px-5 py-3.5 font-bold text-center">Tiempo Servido</th>

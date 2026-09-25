@@ -61,7 +61,7 @@ include 'includes/header.php';
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
-                    <th class="px-6 py-4 font-medium">Empleado</th>
+                    <th class="px-6 py-4 font-medium">Trabajador</th>
                     <th class="px-6 py-4 font-medium">Fecha Cálculo</th>
                     <th class="px-6 py-4 font-medium">Motivo</th>
                     <th class="px-6 py-4 font-medium text-right">Total Asignaciones</th>

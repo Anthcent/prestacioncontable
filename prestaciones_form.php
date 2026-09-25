@@ -176,7 +176,7 @@ if (empty($motivos_list)) {
             nombre VARCHAR(100) UNIQUE NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )");
-        $defaults = ['Renuncia', 'Despido', 'Jubilación', 'Obrero', 'Empleado'];
+        $defaults = ['Renuncia', 'Despido', 'Jubilación', 'Obrero', 'Trabajador'];
         $stmt_seed = $pdo->prepare("INSERT IGNORE INTO motivos_egreso (nombre) VALUES (?)");
         foreach ($defaults as $d) { $stmt_seed->execute([$d]); }
         $stmt_mot = $pdo->query("SELECT id, nombre FROM motivos_egreso ORDER BY nombre ASC");
@@ -184,8 +184,17 @@ if (empty($motivos_list)) {
     } catch(PDOException $e) {}
 }
 
+// Mantener compatibilidad con registros antiguos sin mostrar la terminología anterior.
+foreach ($motivos_list as &$motivo_item) {
+    if (strcasecmp($motivo_item['nombre'], 'Empleado') === 0) {
+        $motivo_item['nombre'] = 'Trabajador';
+    }
+}
+unset($motivo_item);
+
 // Determinar motivo seleccionado actual (manteniendo compatibilidad)
 $current_motivo = !empty($p['motivo']) ? trim($p['motivo']) : 'Renuncia';
+if (strcasecmp($current_motivo, 'Empleado') === 0) $current_motivo = 'Trabajador';
 $found_motivo = false;
 foreach ($motivos_list as $m) {
     if (strcasecmp($m['nombre'], $current_motivo) === 0) {
@@ -227,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guardar_planilla'])) {
     }
 
     if (!$crear_trabajador && !$emp) {
-        $error = "Debe seleccionar un empleado válido.";
+        $error = "Debe seleccionar un trabajador válido.";
     } elseif ($crear_trabajador && (empty($emp['cedula']) || empty($emp['apellidos_nombres']) || empty($emp['cargo']) || empty($emp['fecha_ingreso']))) {
         $error = "Complete la cédula, nombres y apellidos, cargo y fecha de ingreso del nuevo trabajador.";
     } elseif ($crear_trabajador && $emp['categoria'] === 'Obrero' && ((int)$emp['nivel'] < 1 || (int)$emp['nivel'] > 10)) {
@@ -407,7 +416,7 @@ include 'includes/header.php';
                 </span>
             </div>
             <h2 class="text-2xl font-extrabold tracking-tight">
-                <?php echo ($p['regla_perfil'] == 'LEGADO_120_180') ? '📄 Liquidación Histórica (120 Util / 180 Vac)' : '📄 Liquidación de Prestaciones Sociales (Regla LOTTT 30 Días)'; ?>
+                <?php echo ($p['regla_perfil'] == 'LEGADO_120_180') ? '📄 Liquidación Histórica (120 Util / 180 Vac)' : '📄 Liquidación de Prestaciones Sociales'; ?>
             </h2>
             <p class="text-xs text-slate-300 mt-1 max-w-xl">
                 Seleccione el trabajador y la regla de cálculo deseada. Los datos permanentes se recargan automáticamente.
@@ -516,7 +525,7 @@ include 'includes/header.php';
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Categoría</label>
                                 <select name="nuevo_categoria" id="nuevo_categoria" onchange="actualizarClasificacionNueva()" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white">
                                     <option value="">— Seleccione —</option>
-                                    <option value="Empleado" <?php echo ($_POST['nuevo_categoria'] ?? '') === 'Empleado' ? 'selected' : ''; ?>>Empleado</option>
+                                    <option value="Empleado" <?php echo ($_POST['nuevo_categoria'] ?? '') === 'Empleado' ? 'selected' : ''; ?>>Trabajador</option>
                                     <option value="Obrero" <?php echo ($_POST['nuevo_categoria'] ?? '') === 'Obrero' ? 'selected' : ''; ?>>Obrero</option>
                                 </select>
                             </div>
@@ -1163,7 +1172,7 @@ include 'includes/header.php';
                     <td colspan="3" class="font-bold text-right">Cedula de Identidad :</td>
                     <td colspan="2" class="text-center font-bold" id="pv_cedula"><?php echo htmlspecialchars($emp['cedula'] ?? ''); ?></td>
                     <td class="font-bold text-right">CATEGORIA:</td>
-                    <td class="text-center font-bold" id="pv_categoria"><?php echo htmlspecialchars($emp['categoria'] ?? 'EMPLEADO'); ?></td>
+                    <td class="text-center font-bold" id="pv_categoria"><?php echo htmlspecialchars(($emp['categoria'] ?? 'Empleado') === 'Empleado' ? 'TRABAJADOR' : ($emp['categoria'] ?? '')); ?></td>
                 </tr>
                 <tr><td colspan="7" class="border-0" style="height: 4px;"></td></tr>
                 <tr>
@@ -1766,7 +1775,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const campo = document.querySelector(`[name="${nombre}"]`);
         campo?.addEventListener('input', function () {
             const salida = document.getElementById(destino);
-            if (salida) salida.textContent = this.value;
+            if (salida) salida.textContent = this.value === 'Empleado' ? 'Trabajador' : this.value;
             if (nombre === 'nuevo_cargo') document.getElementById('emp_cargo').value = this.value;
             if (nombre === 'nuevo_clase_cargo') document.getElementById('emp_clase_cargo').value = this.value;
             if (nombre === 'nuevo_categoria') document.getElementById('emp_categoria').value = this.value;

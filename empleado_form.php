@@ -65,7 +65,7 @@ include 'includes/header.php';
         <i class="fa-solid fa-arrow-left text-xl"></i>
     </a>
     <div>
-        <h2 class="text-2xl font-bold text-slate-800"><?php echo $id > 0 ? 'Editar Empleado' : 'Nuevo Empleado'; ?></h2>
+        <h2 class="text-2xl font-bold text-slate-800"><?php echo $id > 0 ? 'Editar Trabajador' : 'Nuevo Trabajador'; ?></h2>
         <p class="text-slate-500">Ingrese los datos laborales básicos</p>
     </div>
 </div>
@@ -120,7 +120,7 @@ include 'includes/header.php';
             <select name="categoria" id="categoria" onchange="actualizarClasificacion()" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white">
                 <option value="" <?php echo $emp['categoria'] == '' ? 'selected' : ''; ?>>-- Seleccione --</option>
                 <option value="Obrero" <?php echo $emp['categoria'] == 'Obrero' ? 'selected' : ''; ?>>Obrero</option>
-                <option value="Empleado" <?php echo $emp['categoria'] == 'Empleado' ? 'selected' : ''; ?>>Empleado</option>
+                <option value="Empleado" <?php echo $emp['categoria'] == 'Empleado' ? 'selected' : ''; ?>>Trabajador</option>
             </select>
         </div>
         
@@ -134,7 +134,7 @@ include 'includes/header.php';
     <div class="mt-8 flex justify-end gap-4 border-t border-slate-100 pt-6">
         <a href="empleados.php" class="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors">Cancelar</a>
         <button type="submit" class="bg-brand-blue hover:bg-blue-900 text-white px-8 py-2 rounded-lg shadow transition-colors font-medium">
-            <i class="fa-solid fa-save mr-2"></i> Guardar Empleado
+            <i class="fa-solid fa-save mr-2"></i> Guardar Trabajador
         </button>
     </div>
 </form>

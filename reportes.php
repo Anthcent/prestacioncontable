@@ -120,7 +120,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     fputcsv($out, [
         'ID',
         'Cedula',
-        'Empleado',
+        'Trabajador',
         'Cargo',
         'Fecha Ingreso',
         'Fecha Egreso',
@@ -455,7 +455,7 @@ include 'includes/header.php';
                             <option value="fecha_asc" <?php echo ($orden === 'fecha_asc') ? 'selected' : ''; ?>>Fecha Cálculo (Antigua primero)</option>
                             <option value="monto_desc" <?php echo ($orden === 'monto_desc') ? 'selected' : ''; ?>>Mayor Monto Neto</option>
                             <option value="monto_asc" <?php echo ($orden === 'monto_asc') ? 'selected' : ''; ?>>Menor Monto Neto</option>
-                            <option value="nombre_asc" <?php echo ($orden === 'nombre_asc') ? 'selected' : ''; ?>>Nombre Empleado (A - Z)</option>
+                            <option value="nombre_asc" <?php echo ($orden === 'nombre_asc') ? 'selected' : ''; ?>>Nombre del Trabajador (A - Z)</option>
                         </select>
                     </div>
                 </div>

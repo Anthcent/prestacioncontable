@@ -21,7 +21,7 @@ try {
     // Sembrar los 5 motivos por defecto si la tabla está vacía
     $count = (int)$pdo->query("SELECT COUNT(*) FROM motivos_egreso")->fetchColumn();
     if ($count === 0) {
-        $defaults = ['Renuncia', 'Despido', 'Jubilación', 'Obrero', 'Empleado'];
+        $defaults = ['Renuncia', 'Despido', 'Jubilación', 'Obrero', 'Trabajador'];
         $stmt_seed = $pdo->prepare("INSERT IGNORE INTO motivos_egreso (nombre) VALUES (?)");
         foreach ($defaults as $d) {
             $stmt_seed->execute([$d]);

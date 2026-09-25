@@ -242,7 +242,7 @@ include 'includes/header.php';
         <div>
             <div class="flex items-center gap-2.5">
                 <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-table-list text-brand-blue"></i> Consolidado por Empleado
+                    <i class="fa-solid fa-table-list text-brand-blue"></i> Consolidado por Trabajador
                 </h2>
                 <span class="text-xs font-extrabold text-slate-800 bg-slate-200/90 border border-slate-300 px-2.5 py-0.5 rounded-full">
                     <?php echo count($resumen); ?> <?php echo count($resumen) === 1 ? 'registro' : 'registros'; ?>
@@ -299,7 +299,7 @@ include 'includes/header.php';
             <thead>
                 <tr class="bg-slate-100 text-slate-900 text-xs font-black uppercase tracking-wider border-b-2 border-slate-300">
                     <th class="px-4 py-3.5 text-center w-12">N°</th>
-                    <th class="px-4 py-3.5">Empleado / Cédula</th>
+                    <th class="px-4 py-3.5">Trabajador / Cédula</th>
                     <th class="px-4 py-3.5">Cargo & Motivo</th>
                     <th class="px-4 py-3.5 text-center">Régimen</th>
                     <th class="px-4 py-3.5 text-center">Fecha Egreso</th>
@@ -575,7 +575,7 @@ include 'includes/header.php';
             </div>
         </a>
 
-        <!-- 5: Nuevo Empleado -->
+        <!-- 5: Nuevo Trabajador -->
         <a href="empleado_form.php" class="block p-3.5 rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 hover:border-brand-blue hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-1.5">
                 <span class="text-[10px] font-black uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
@@ -584,13 +584,13 @@ include 'includes/header.php';
                 <i class="fa-solid fa-user-plus text-brand-blue group-hover:scale-110 transition-transform"></i>
             </div>
             <h4 class="font-extrabold text-slate-900 text-xs group-hover:text-brand-blue transition-colors">
-                Registrar Nuevo Empleado
+                Registrar Nuevo Trabajador
             </h4>
             <p class="text-[11px] text-slate-600 font-medium mt-1 leading-snug">
                 Crear ficha de trabajador con datos salariales y fecha de ingreso.
             </p>
             <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10px] font-black text-brand-blue flex items-center justify-between">
-                <span>Crear empleado</span>
+                <span>Crear trabajador</span>
                 <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
             </div>
         </a>

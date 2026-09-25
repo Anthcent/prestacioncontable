@@ -123,7 +123,7 @@ echo "\xEF\xBB\xBF";
             <td colspan="3" class="font-bold text-right">Cedula de Identidad :</td>
             <td colspan="2" class="text-center font-bold"><?php echo htmlspecialchars($p['cedula']); ?></td>
             <td class="font-bold text-right">CATEGORIA:</td>
-            <td class="text-center font-bold"><?php echo htmlspecialchars($p['categoria'] ?: 'EMPLEADO'); ?></td>
+            <td class="text-center font-bold"><?php echo htmlspecialchars(($p['categoria'] ?: 'Empleado') === 'Empleado' ? 'TRABAJADOR' : $p['categoria']); ?></td>
         </tr>
         <tr><td colspan="7"></td></tr>
         <tr>

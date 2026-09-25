@@ -370,7 +370,8 @@ include 'includes/header.php';
     box-shadow: 0 0 0 3px rgba(245, 158, 11, .18);
 }
 #nuevo_trabajador_panel input,
-#nuevo_trabajador_panel select {
+#nuevo_trabajador_panel select,
+#trabajador_dropdown input {
     background-color: #ffffff !important;
     border-color: #cbd5e1 !important;
 }
@@ -466,27 +467,29 @@ include 'includes/header.php';
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
+                    <div class="md:col-span-2 relative z-50" id="trabajador_combobox_container">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Seleccionar Trabajador:</label>
-                        <div class="rounded-2xl border border-slate-300 bg-white p-2 shadow-sm">
-                            <div class="relative mb-2">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-xs"></i>
-                                <input type="search" id="buscar_trabajador" oninput="filtrarTrabajadores(this.value)" placeholder="Buscar por nombre o cédula..." autocomplete="off" class="w-full py-2.5 pl-9 pr-3 border rounded-xl text-sm font-semibold outline-none">
+                        <button type="button" id="trabajador_trigger_btn" onclick="toggleTrabajadorDropdown()" class="w-full p-3.5 bg-brand-blue hover:bg-blue-950 text-white border border-brand-blue rounded-xl focus:ring-2 focus:ring-amber-400 outline-none flex items-center justify-between shadow-md transition-all text-left">
+                            <span class="flex items-center gap-3 min-w-0">
+                                <span class="w-8 h-8 rounded-lg bg-white/10 text-brand-yellow flex items-center justify-center shrink-0"><i class="fa-solid <?php echo !empty($crear_trabajador) ? 'fa-user-plus' : 'fa-user'; ?>"></i></span>
+                                <span id="trabajador_display_text" class="text-sm font-extrabold truncate"><?php echo !empty($crear_trabajador) ? 'Agregar un nuevo trabajador' : ($emp ? htmlspecialchars($emp['cedula'] . ' — ' . $emp['apellidos_nombres']) : 'Seleccione o busque un trabajador'); ?></span>
+                            </span>
+                            <i id="trabajador_chevron" class="fa-solid fa-chevron-down text-xs text-white/70 transition-transform"></i>
+                        </button>
+
+                        <div id="trabajador_dropdown" class="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-slate-300 p-3 hidden min-w-[280px]">
+                            <div class="relative mb-2.5">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                                <input type="search" id="buscar_trabajador" oninput="filtrarTrabajadores(this.value)" placeholder="Buscar por nombre o cédula..." autocomplete="off" class="w-full py-2.5 pl-9 pr-9 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-brand-blue">
+                                <button type="button" onclick="limpiarBusquedaTrabajador()" class="absolute right-2.5 top-2.5 w-6 h-6 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
-                                <select id="selector_trabajador" onchange="cambiarTrabajador(this.value)" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-brand-blue outline-none font-bold text-slate-800 text-sm">
-                                    <option value="" <?php echo $empleado_id === 0 ? 'selected' : ''; ?>>— Seleccione un trabajador —</option>
-                                    <?php foreach ($empleados_list as $e_item): ?>
-                                        <option value="<?php echo $e_item['id']; ?>" <?php echo ($e_item['id'] == $empleado_id) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($e_item['cedula']) . " — " . htmlspecialchars($e_item['apellidos_nombres']) . " (" . htmlspecialchars($e_item['cargo']) . ")"; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="button" onclick="cambiarTrabajador('nuevo')" class="bg-slate-900 hover:bg-blue-950 text-white px-4 py-3 rounded-xl font-extrabold text-xs transition-colors shadow flex items-center justify-center gap-2 whitespace-nowrap">
+                            <div id="trabajadores_items_list" class="max-h-56 overflow-y-auto space-y-1 custom-scrollbar"></div>
+                            <div id="trabajador_no_results" class="hidden py-4 text-center text-xs font-bold text-slate-500">No se encontraron trabajadores.</div>
+                            <div class="mt-3 pt-3 border-t border-slate-200">
+                                <button type="button" onclick="cambiarTrabajador('nuevo')" class="w-full bg-brand-blue hover:bg-blue-950 text-white px-4 py-3 rounded-xl font-extrabold text-xs transition-colors shadow flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-user-plus text-brand-yellow"></i> Agregar nuevo trabajador
                                 </button>
                             </div>
-                            <p id="resultado_busqueda_trabajador" class="mt-2 px-1 text-xs text-slate-500">Escriba una cédula o un nombre para reducir la lista.</p>
                         </div>
                     </div>
 
@@ -1639,31 +1642,70 @@ include 'includes/header.php';
 </div>
 
 <script class="no-print">
-let opcionesTrabajadores = [];
+const opcionesTrabajadores = <?php echo json_encode(array_map(static function ($item) {
+    return [
+        'valor' => (string)$item['id'],
+        'cedula' => $item['cedula'],
+        'nombre' => $item['apellidos_nombres'],
+        'cargo' => $item['cargo']
+    ];
+}, $empleados_list), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
+function renderTrabajadores(items = opcionesTrabajadores) {
+    const lista = document.getElementById('trabajadores_items_list');
+    const sinResultados = document.getElementById('trabajador_no_results');
+    if (!lista) return;
+    lista.innerHTML = items.map(item => `
+        <button type="button" onclick="cambiarTrabajador('${item.valor}')" class="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-colors text-left group">
+            <span class="w-8 h-8 rounded-lg bg-slate-100 text-brand-blue flex items-center justify-center shrink-0 group-hover:bg-brand-blue group-hover:text-white"><i class="fa-solid fa-user"></i></span>
+            <span class="min-w-0 flex-1">
+                <strong class="block text-xs text-slate-900 truncate">${escapeHtml(item.nombre)}</strong>
+                <small class="block text-[11px] text-slate-600 truncate">${escapeHtml(item.cedula)} · ${escapeHtml(item.cargo || 'Sin cargo')}</small>
+            </span>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+        </button>
+    `).join('');
+    sinResultados?.classList.toggle('hidden', items.length > 0);
+}
+
+function toggleTrabajadorDropdown() {
+    const dropdown = document.getElementById('trabajador_dropdown');
+    const chevron = document.getElementById('trabajador_chevron');
+    if (!dropdown) return;
+    const abrir = dropdown.classList.contains('hidden');
+    dropdown.classList.toggle('hidden', !abrir);
+    if (chevron) chevron.style.transform = abrir ? 'rotate(180deg)' : 'rotate(0deg)';
+    if (abrir) {
+        renderTrabajadores();
+        const buscador = document.getElementById('buscar_trabajador');
+        if (buscador) {
+            buscador.value = '';
+            setTimeout(() => buscador.focus(), 50);
+        }
+    }
+}
+
+function closeTrabajadorDropdown() {
+    document.getElementById('trabajador_dropdown')?.classList.add('hidden');
+    const chevron = document.getElementById('trabajador_chevron');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+}
 
 function filtrarTrabajadores(consulta) {
-    const selector = document.getElementById('selector_trabajador');
-    const resultado = document.getElementById('resultado_busqueda_trabajador');
-    if (!selector) return;
-
     const termino = consulta.trim().toLocaleLowerCase('es');
-    const coincidencias = opcionesTrabajadores.filter(item => item.texto.toLocaleLowerCase('es').includes(termino));
-    const seleccionado = selector.value;
-    selector.innerHTML = '<option value="">— Seleccione un trabajador —</option>';
-    coincidencias.forEach(item => {
-        const opcion = document.createElement('option');
-        opcion.value = item.valor;
-        opcion.textContent = item.texto;
-        opcion.selected = item.valor === seleccionado;
-        selector.appendChild(opcion);
-    });
+    const coincidencias = opcionesTrabajadores.filter(item =>
+        `${item.nombre} ${item.cedula} ${item.cargo}`.toLocaleLowerCase('es').includes(termino)
+    );
+    renderTrabajadores(coincidencias);
+}
 
-    if (resultado) {
-        resultado.textContent = termino
-            ? `${coincidencias.length} trabajador${coincidencias.length === 1 ? '' : 'es'} encontrado${coincidencias.length === 1 ? '' : 's'}.`
-            : 'Escriba una cédula o un nombre para reducir la lista.';
-        resultado.classList.toggle('text-rose-600', termino !== '' && coincidencias.length === 0);
+function limpiarBusquedaTrabajador() {
+    const buscador = document.getElementById('buscar_trabajador');
+    if (buscador) {
+        buscador.value = '';
+        buscador.focus();
     }
+    renderTrabajadores();
 }
 
 function cambiarTrabajador(valor) {
@@ -1673,7 +1715,7 @@ function cambiarTrabajador(valor) {
     const fechaIngreso = document.getElementById('fecha_ingreso');
 
     if (valor === 'nuevo') {
-        document.getElementById('selector_trabajador').value = '';
+        closeTrabajadorDropdown();
         empleadoId.value = '0';
         crear.value = '1';
         panel.classList.remove('hidden');
@@ -1708,11 +1750,6 @@ function actualizarClasificacionNueva() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const selector = document.getElementById('selector_trabajador');
-    opcionesTrabajadores = selector
-        ? Array.from(selector.options).filter(opcion => opcion.value).map(opcion => ({ valor: opcion.value, texto: opcion.textContent.trim() }))
-        : [];
-
     const esNuevo = document.getElementById('crear_trabajador')?.value === '1';
     document.querySelectorAll('.nuevo-trabajador-campo').forEach(campo => campo.disabled = !esNuevo);
     actualizarClasificacionNueva();
@@ -2014,6 +2051,11 @@ document.addEventListener('click', function(e) {
     if (container && !container.contains(e.target) && dropdown && !dropdown.classList.contains('hidden')) {
         closeMotivoDropdown();
     }
+    const trabajadorContainer = document.getElementById('trabajador_combobox_container');
+    const trabajadorDropdown = document.getElementById('trabajador_dropdown');
+    if (trabajadorContainer && !trabajadorContainer.contains(e.target) && trabajadorDropdown && !trabajadorDropdown.classList.contains('hidden')) {
+        closeTrabajadorDropdown();
+    }
 });
 
 // Cerrar con Escape
@@ -2023,6 +2065,7 @@ document.addEventListener('keydown', function(e) {
         if (dropdown && !dropdown.classList.contains('hidden')) {
             closeMotivoDropdown();
         }
+        closeTrabajadorDropdown();
     }
 });
 

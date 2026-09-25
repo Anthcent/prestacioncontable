@@ -10,7 +10,7 @@ $lote = isset($_GET['lote']) ? $_GET['lote'] : '';
 $ids = isset($_GET['ids']) && is_array($_GET['ids']) ? array_map('intval', $_GET['ids']) : [];
 
 if ($id == 0 && empty($lote) && empty($ids)) {
-    die("No se especificó ninguna planilla o lote para exportar.");
+    die("No se especificó ninguna liquidación o lote para exportar.");
 }
 
 $records = [];
@@ -25,7 +25,7 @@ if ($id > 0) {
     $stmt->execute([$id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row) $records[] = $row;
-    $filename = "planilla_prestaciones_" . ($row['cedula'] ?? 'export') . ".xls";
+    $filename = "liquidacion_prestaciones_" . ($row['cedula'] ?? 'export') . ".xls";
 } elseif ($lote === 'all') {
     $stmt = $pdo->query("
         SELECT p.*, e.cedula, e.apellidos_nombres, e.cargo, e.clase_cargo, e.nivel, e.categoria, e.fecha_ingreso 

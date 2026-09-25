@@ -21,7 +21,7 @@ include 'includes/header.php';
         <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
             <i class="fa-solid fa-layer-group text-brand-blue"></i> Gestión de Lotes de Liquidación
         </h2>
-        <p class="text-slate-500 text-xs">Seleccione planillas específicas para generar un informe consolidado o exportar</p>
+        <p class="text-slate-500 text-xs">Seleccione liquidaciones específicas para generar un informe consolidado o exportar</p>
     </div>
     <div>
         <a href="export_excel.php?lote=all" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow transition-colors flex items-center gap-2 text-sm">

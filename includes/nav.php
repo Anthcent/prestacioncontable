@@ -61,14 +61,14 @@
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo (strpos(basename($_SERVER['PHP_SELF']), 'prestaciones') !== false) ? 'bg-brand-yellow text-brand-dark shadow-[0_0_12px_rgba(255,204,0,0.5)]' : 'bg-black/20 group-hover:bg-black/40 text-slate-400 group-hover:text-brand-yellow transition-colors'; ?>">
                     <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
                 </div>
-                <span class="text-sm">Cálculos / Planillas</span>
+                <span class="text-sm">Cálculos / Liquidaciones</span>
             </a>
 
             <a href="catalogo.php" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 <?php echo (basename($_SERVER['PHP_SELF']) == 'catalogo.php') ? 'bg-gradient-to-r from-brand-blue/60 to-transparent text-white font-medium border-l-4 border-brand-yellow shadow-lg' : 'border-l-4 border-transparent hover:border-slate-500/50 hover:translate-x-1'; ?>">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo (basename($_SERVER['PHP_SELF']) == 'catalogo.php') ? 'bg-brand-yellow text-brand-dark shadow-[0_0_12px_rgba(255,204,0,0.5)]' : 'bg-black/20 group-hover:bg-black/40 text-slate-400 group-hover:text-brand-yellow transition-colors'; ?>">
                     <i class="fa-solid fa-folder-open text-sm"></i>
                 </div>
-                <span class="text-sm">Catálogo de Planillas</span>
+                <span class="text-sm">Historial de Liquidaciones</span>
             </a>
 
             <a href="lotes.php" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 <?php echo (basename($_SERVER['PHP_SELF']) == 'lotes.php') ? 'bg-gradient-to-r from-brand-blue/60 to-transparent text-white font-medium border-l-4 border-brand-yellow shadow-lg' : 'border-l-4 border-transparent hover:border-slate-500/50 hover:translate-x-1'; ?>">

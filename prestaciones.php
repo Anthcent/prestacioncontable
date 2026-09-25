@@ -32,7 +32,7 @@ include 'includes/header.php';
 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
     <div>
         <h2 class="text-2xl font-bold text-slate-800">Cálculos de Prestaciones</h2>
-        <p class="text-slate-500">Historial de planillas generadas</p>
+        <p class="text-slate-500">Historial de liquidaciones generadas</p>
     </div>
     <div class="grid grid-cols-1 sm:flex gap-2 w-full sm:w-auto">
         <a href="catalogo.php" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition-colors flex items-center gap-2 text-sm font-bold">
@@ -47,11 +47,11 @@ include 'includes/header.php';
 <?php if(isset($_GET['msg'])): ?>
     <?php if($_GET['msg'] == 'saved'): ?>
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r shadow-sm" role="alert">
-            <p>La planilla se guardó exitosamente.</p>
+            <p>La liquidación se guardó exitosamente.</p>
         </div>
     <?php elseif($_GET['msg'] == 'deleted'): ?>
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r shadow-sm" role="alert">
-            <p>La planilla de liquidación fue eliminada del sistema.</p>
+            <p>La liquidación fue eliminada del sistema.</p>
         </div>
     <?php endif; ?>
 <?php endif; ?>
@@ -91,7 +91,7 @@ include 'includes/header.php';
                         </td>
                         <td class="px-6 py-4 text-sm text-right">
                             <div class="flex justify-end gap-2">
-                                <a href="prestaciones_view.php?id=<?php echo $p['id']; ?>" class="text-brand-blue bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors" title="Ver Planilla">
+                                <a href="prestaciones_view.php?id=<?php echo $p['id']; ?>" class="text-brand-blue bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors" title="Ver Liquidación">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                                 <a href="prestaciones_form.php?id=<?php echo $p['id']; ?>&empleado_id=<?php echo $p['empleado_id']; ?>" class="text-brand-yellow bg-yellow-50 hover:bg-yellow-100 px-3 py-1 rounded transition-colors" title="Editar">

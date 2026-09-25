@@ -266,9 +266,9 @@ include 'includes/header.php';
 
         <!-- BOTONES DE ACCIÓN PRINCIPALES REUBICADOS EN LA TABLA -->
         <div class="flex items-center gap-2.5 no-print">
-            <a href="catalogo.php" class="bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 px-3.5 py-2 rounded-xl font-bold text-xs transition-colors flex items-center gap-2 shadow-xs" title="Ver catálogo de planillas y reportes">
+            <a href="catalogo.php" class="bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 px-3.5 py-2 rounded-xl font-bold text-xs transition-colors flex items-center gap-2 shadow-xs" title="Ver historial de liquidaciones y reportes">
                 <i class="fa-solid fa-folder-open text-brand-blue"></i>
-                <span>Catálogo de Planillas</span>
+                <span>Historial de Liquidaciones</span>
             </a>
             <button onclick="openNewModal()" type="button" class="bg-brand-blue hover:bg-blue-900 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-all flex items-center gap-2 shadow-sm cursor-pointer" title="Registrar nuevo empleado">
                 <i class="fa-solid fa-plus text-brand-yellow"></i>
@@ -424,7 +424,7 @@ include 'includes/header.php';
                         <td class="px-4 py-3.5 text-center whitespace-nowrap">
                             <?php if($emp['total_liquidaciones'] > 0): ?>
                                 <span class="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-1 rounded-lg text-xs">
-                                    <i class="fa-solid fa-circle-check text-[10px]"></i> <?php echo $emp['total_liquidaciones']; ?> planilla(s)
+                                    <i class="fa-solid fa-circle-check text-[10px]"></i> <?php echo $emp['total_liquidaciones']; ?> liquidación(es)
                                 </span>
                             <?php else: ?>
                                 <span class="inline-flex items-center gap-1 font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-lg text-xs">
@@ -441,9 +441,9 @@ include 'includes/header.php';
                                     <i class="fa-solid fa-calculator text-xs"></i> Liquidar
                                 </a>
 
-                                <!-- Botón 2: Ver Planilla (si ya tiene cálculo) -->
+                                <!-- Botón 2: Ver liquidación (si ya tiene cálculo) -->
                                 <?php if($emp['total_liquidaciones'] > 0 && !empty($emp['ultima_prestacion_id'])): ?>
-                                    <a href="prestaciones_view.php?id=<?php echo $emp['ultima_prestacion_id']; ?>" class="bg-blue-100 hover:bg-blue-200 text-brand-blue border border-blue-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center" title="Ver última planilla oficial de prestaciones">
+                                    <a href="prestaciones_view.php?id=<?php echo $emp['ultima_prestacion_id']; ?>" class="bg-blue-100 hover:bg-blue-200 text-brand-blue border border-blue-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center" title="Ver última liquidación de prestaciones">
                                         <i class="fa-solid fa-eye text-xs"></i>
                                     </a>
                                 <?php endif; ?>

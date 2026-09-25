@@ -21,7 +21,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id]);
 $p = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if(!$p) die("Planilla no encontrada");
+if(!$p) die("Liquidación no encontrada");
 
 // Recalcular en vivo con la calculadora PHP para garantizar conformidad matemática estricta
 $calc_results = PrestacionesCalculator::calculate(array_merge($p, ['fecha_ingreso' => $p['fecha_ingreso']]));
@@ -46,7 +46,7 @@ $t_meses = $calc_results['tiempo']['total_months'] ?? 0;
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Planilla de Prestaciones - <?php echo htmlspecialchars($p['apellidos_nombres']); ?> - PRIME CONTADORES PÚBLICOS</title>
+    <title>Liquidación de Prestaciones Sociales - <?php echo htmlspecialchars($p['apellidos_nombres']); ?> - PRIME CONTADORES PÚBLICOS</title>
     <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
     <link rel="shortcut icon" href="assets/img/favicon.ico">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
@@ -121,12 +121,12 @@ $t_meses = $calc_results['tiempo']['total_months'] ?? 0;
                     <i class="fa-solid fa-file-excel"></i> Exportar a Excel
                 </a>
                 <button class="btn btn-blue" onclick="window.print()">
-                    <i class="fa-solid fa-print"></i> Imprimir Planilla
+                    <i class="fa-solid fa-print"></i> Imprimir Liquidación
                 </button>
             </div>
         </div>
 
-        <!-- PLANILLA INSTITUCIONAL DISTAL S.A. / GOBIERNO BOLIVARIANO DE TRUJILLO -->
+        <!-- DOCUMENTO INSTITUCIONAL DISTAL S.A. / GOBIERNO BOLIVARIANO DE TRUJILLO -->
         <table class="excel-grid">
             <colgroup>
                 <col style="width: 14%;">

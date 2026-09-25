@@ -97,9 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fa-solid fa-shield-halved"></i> Acceso seguro
                     </span>
                     <h2 class="mt-6 text-4xl font-black leading-tight tracking-tight">Gestión contable con precisión y confianza.</h2>
-                    <p class="mt-5 text-sm leading-7 text-slate-300">Administre empleados, prestaciones sociales, planillas y reportes desde un entorno centralizado.</p>
+                    <p class="mt-5 text-sm leading-7 text-slate-300">Administre empleados, prestaciones sociales, liquidaciones y reportes desde un entorno centralizado.</p>
                     <div class="grid grid-cols-2 gap-3 mt-9">
-                        <div class="rounded-2xl border border-white/10 bg-white/[.045] p-4"><i class="fa-solid fa-file-invoice-dollar text-amber-300"></i><p class="mt-3 text-xs font-semibold text-slate-200">Cálculos y planillas</p></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/[.045] p-4"><i class="fa-solid fa-file-invoice-dollar text-amber-300"></i><p class="mt-3 text-xs font-semibold text-slate-200">Cálculos y liquidaciones</p></div>
                         <div class="rounded-2xl border border-white/10 bg-white/[.045] p-4"><i class="fa-solid fa-chart-line text-amber-300"></i><p class="mt-3 text-xs font-semibold text-slate-200">Reportes consolidados</p></div>
                     </div>
                 </div>

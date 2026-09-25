@@ -121,7 +121,7 @@ include 'includes/header.php';
             </div>
             <div class="flex items-baseline gap-2 mt-1">
                 <span class="text-3xl font-black text-slate-900 tracking-tight font-mono"><?php echo $total_expedientes; ?></span>
-                <span class="text-xs font-bold text-slate-500 uppercase"><?php echo $total_expedientes === 1 ? 'planilla' : 'planillas'; ?></span>
+                <span class="text-xs font-bold text-slate-500 uppercase"><?php echo $total_expedientes === 1 ? 'liquidación' : 'liquidaciones'; ?></span>
             </div>
         </div>
 
@@ -255,7 +255,7 @@ include 'includes/header.php';
 
         <!-- BOTONES DE EXPORTACIÓN E IMPRESIÓN REUBICADOS ADECUADAMENTE JUNTO A LA TABLA -->
         <div class="flex flex-wrap items-center gap-2.5 no-print">
-            <a href="export_excel.php?lote=all" class="bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-extrabold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 text-xs" title="Descargar libro Excel con todas las planillas calculadas">
+            <a href="export_excel.php?lote=all" class="bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-extrabold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 text-xs" title="Descargar libro Excel con todas las liquidaciones calculadas">
                 <i class="fa-solid fa-file-excel text-sm text-white"></i> Exportar Lote Excel (.xls)
             </a>
             <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 active:bg-black text-white font-extrabold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 text-xs" title="Imprimir o exportar a PDF la hoja de resumen consolidado">
@@ -288,7 +288,7 @@ include 'includes/header.php';
             </div>
         <?php else: ?>
             <div class="text-xs font-semibold text-slate-600 hidden md:block">
-                <i class="fa-solid fa-circle-info text-brand-blue mr-1"></i> Haga clic en <strong>Ver</strong> para revisar la planilla legal completa
+                <i class="fa-solid fa-circle-info text-brand-blue mr-1"></i> Haga clic en <strong>Ver</strong> para revisar la liquidación completa
             </div>
         <?php endif; ?>
     </div>
@@ -389,10 +389,10 @@ include 'includes/header.php';
                         <!-- Acciones -->
                         <td class="px-4 py-3.5 text-center no-print whitespace-nowrap">
                             <div class="inline-flex items-center gap-1">
-                                <a href="prestaciones_view.php?id=<?php echo $row['prestacion_id']; ?>" class="bg-brand-blue hover:bg-blue-900 text-white px-2.5 py-1.5 rounded-lg font-extrabold text-xs transition-colors inline-flex items-center gap-1 shadow-xs" title="Ver Planilla Oficial Completa">
+                                <a href="prestaciones_view.php?id=<?php echo $row['prestacion_id']; ?>" class="bg-brand-blue hover:bg-blue-900 text-white px-2.5 py-1.5 rounded-lg font-extrabold text-xs transition-colors inline-flex items-center gap-1 shadow-xs" title="Ver Liquidación Completa">
                                     <i class="fa-solid fa-eye text-xs"></i> Ver
                                 </a>
-                                <a href="export_excel.php?id=<?php echo $row['prestacion_id']; ?>" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 border border-emerald-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center" title="Descargar Excel de esta planilla">
+                                <a href="export_excel.php?id=<?php echo $row['prestacion_id']; ?>" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 border border-emerald-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center" title="Descargar Excel de esta liquidación">
                                     <i class="fa-solid fa-file-excel text-xs"></i>
                                 </a>
                                 <a href="prestaciones_form.php?id=<?php echo $row['prestacion_id']; ?>&empleado_id=<?php echo $row['empleado_id']; ?>" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2 py-1.5 rounded-lg font-bold text-xs transition-colors inline-flex items-center" title="Editar cálculo">
@@ -495,7 +495,7 @@ include 'includes/header.php';
 
     <!-- LISTA DE ACCESOS DIRECTOS -->
     <div class="flex-1 overflow-y-auto p-5 space-y-3 custom-scrollbar">
-        <!-- 1: Planilla LOTTT Vigente -->
+        <!-- 1: Liquidación LOTTT vigente -->
         <a href="prestaciones_form.php?regla_perfil=LOTTT_30" class="block p-3.5 rounded-xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/40 hover:border-emerald-500 hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-1.5">
                 <span class="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
@@ -504,7 +504,7 @@ include 'includes/header.php';
                 <i class="fa-solid fa-file-circle-plus text-emerald-600 group-hover:scale-110 transition-transform"></i>
             </div>
             <h4 class="font-extrabold text-slate-900 text-xs group-hover:text-emerald-700 transition-colors">
-                Planilla LOTTT Oficial (30 Días)
+                Liquidación LOTTT (30 Días)
             </h4>
             <p class="text-[11px] text-slate-600 font-medium mt-1 leading-snug">
                 Cálculo estándar según Ley Orgánica con 30 días utilidades y 15 días vacaciones.
@@ -524,7 +524,7 @@ include 'includes/header.php';
                 <i class="fa-solid fa-clock-rotate-left text-amber-600 group-hover:scale-110 transition-transform"></i>
             </div>
             <h4 class="font-extrabold text-slate-900 text-xs group-hover:text-amber-800 transition-colors">
-                Planilla Histórica (120/180)
+                Liquidación Histórica (120/180)
             </h4>
             <p class="text-[11px] text-slate-600 font-medium mt-1 leading-snug">
                 Cálculo retroactivo especial bajo esquema histórico de 120 utilidades y 180 vacaciones.
@@ -535,7 +535,7 @@ include 'includes/header.php';
             </div>
         </a>
 
-        <!-- 3: Catálogo de Planillas -->
+        <!-- 3: Historial de liquidaciones -->
         <a href="catalogo.php" class="block p-3.5 rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 hover:border-brand-blue hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-1.5">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-200 px-2 py-0.5 rounded">
@@ -547,7 +547,7 @@ include 'includes/header.php';
                 Catálogo de Expedientes
             </h4>
             <p class="text-[11px] text-slate-600 font-medium mt-1 leading-snug">
-                Visualice todas las planillas en vista mosaico o fichas individuales.
+                Visualice todas las liquidaciones en vista mosaico o fichas individuales.
             </p>
             <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10px] font-black text-slate-800 flex items-center justify-between">
                 <span>Abrir catálogo</span>

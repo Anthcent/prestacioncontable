@@ -41,9 +41,9 @@ include 'includes/header.php';
 <div class="mb-6 flex flex-wrap justify-between items-center gap-4 no-print">
     <div>
         <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-folder-open text-brand-blue"></i> Catálogo de Planillas y Liquidaciones
+            <i class="fa-solid fa-folder-open text-brand-blue"></i> Historial de Liquidaciones
         </h2>
-        <p class="text-xs text-slate-500">Gestión unificada de planillas de prestaciones sociales de PRIME CONTADORES PÚBLICOS</p>
+        <p class="text-xs text-slate-500">Gestión unificada de liquidaciones de prestaciones sociales de PRIME CONTADORES PÚBLICOS</p>
     </div>
 
     <div class="grid grid-cols-1 sm:flex gap-2 sm:gap-3 w-full lg:w-auto">
@@ -51,7 +51,7 @@ include 'includes/header.php';
             <i class="fa-solid fa-file-excel"></i> Exportar Libro Excel Consolidado
         </a>
         <a href="prestaciones_form.php" class="bg-brand-blue hover:bg-blue-800 text-white font-bold px-4 py-2 rounded-xl shadow transition-colors flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-plus"></i> + Generar Nueva Planilla
+            <i class="fa-solid fa-plus"></i> + Generar Nueva Liquidación
         </a>
     </div>
 </div>
@@ -92,7 +92,7 @@ include 'includes/header.php';
             <div class="bg-gradient-to-r from-brand-dark to-slate-900 text-white p-4 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="bg-brand-yellow text-brand-dark font-extrabold px-3 py-1 rounded-lg text-xs tracking-wide shadow-sm">
-                        PLANILLA #<?php echo $num_item++; ?>
+                        LIQUIDACIÓN #<?php echo $num_item++; ?>
                     </span>
                     <span class="text-[11px] text-amber-300 font-semibold uppercase tracking-wider flex items-center gap-1">
                         <img src="assets/img/logo_icon.png" alt="PRIME" class="w-3.5 h-3.5 object-contain inline"> PRIME
@@ -151,10 +151,10 @@ include 'includes/header.php';
                 </div>
 
                 <div class="grid grid-cols-3 gap-1.5 pt-1">
-                    <a href="prestaciones_view.php?id=<?php echo $p['id']; ?>" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2 rounded-lg text-xs text-center transition-colors shadow-sm flex items-center justify-center gap-1 col-span-2" title="Ver Planilla Oficial de Impresión">
-                        <i class="fa-solid fa-eye"></i> Ver Planilla
+                    <a href="prestaciones_view.php?id=<?php echo $p['id']; ?>" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-2 rounded-lg text-xs text-center transition-colors shadow-sm flex items-center justify-center gap-1 col-span-2" title="Ver Liquidación de Prestaciones">
+                        <i class="fa-solid fa-eye"></i> Ver Liquidación
                     </a>
-                    <a href="prestaciones_form.php?id=<?php echo $p['id']; ?>&empleado_id=<?php echo $p['empleado_id']; ?>" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs text-center transition-colors flex items-center justify-center gap-1" title="Editar Planilla">
+                    <a href="prestaciones_form.php?id=<?php echo $p['id']; ?>&empleado_id=<?php echo $p['empleado_id']; ?>" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs text-center transition-colors flex items-center justify-center gap-1" title="Editar Liquidación">
                         <i class="fa-solid fa-pen"></i> Editar
                     </a>
                 </div>
@@ -164,7 +164,7 @@ include 'includes/header.php';
     <?php else: ?>
         <div class="col-span-3 text-center py-12 text-slate-500 glass-card rounded-2xl">
             <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
-            <p class="font-bold">No se encontraron planillas agregadas.</p>
+            <p class="font-bold">No se encontraron liquidaciones registradas.</p>
         </div>
     <?php endif; ?>
 </div>
@@ -175,7 +175,7 @@ include 'includes/header.php';
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
-                    <th class="px-5 py-3.5 font-bold">N° Planilla</th>
+                    <th class="px-5 py-3.5 font-bold">N° Liquidación</th>
                     <th class="px-5 py-3.5 font-bold">Cédula</th>
                     <th class="px-5 py-3.5 font-bold">Empleado</th>
                     <th class="px-5 py-3.5 font-bold">Cargo</th>
@@ -189,7 +189,7 @@ include 'includes/header.php';
                 <?php $num_item2 = 1; foreach ($planillas as $p): ?>
                 <?php $es_legado2 = ($p['regla_perfil'] == 'LEGADO_120_180'); ?>
                 <tr class="hover:bg-slate-50/70 transition-colors">
-                    <td class="px-5 py-3.5 font-extrabold text-brand-blue">PLANILLA #<?php echo $num_item2++; ?></td>
+                    <td class="px-5 py-3.5 font-extrabold text-brand-blue">LIQUIDACIÓN #<?php echo $num_item2++; ?></td>
                     <td class="px-5 py-3.5 font-bold text-slate-800"><?php echo htmlspecialchars($p['cedula']); ?></td>
                     <td class="px-5 py-3.5 font-semibold text-slate-800"><?php echo htmlspecialchars($p['apellidos_nombres']); ?></td>
                     <td class="px-5 py-3.5 text-xs text-slate-600"><?php echo htmlspecialchars($p['cargo']); ?></td>
@@ -207,7 +207,7 @@ include 'includes/header.php';
                     <td class="px-5 py-3.5 text-center">
                         <div class="flex justify-center gap-1.5">
                             <a href="prestaciones_view.php?id=<?php echo $p['id']; ?>" class="bg-brand-blue hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1">
-                                <i class="fa-solid fa-eye"></i> Ver Planilla
+                                <i class="fa-solid fa-eye"></i> Ver Liquidación
                             </a>
                             <a href="prestaciones_form.php?id=<?php echo $p['id']; ?>&empleado_id=<?php echo $p['empleado_id']; ?>" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors">
                                 <i class="fa-solid fa-pen"></i>

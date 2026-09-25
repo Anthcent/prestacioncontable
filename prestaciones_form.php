@@ -349,7 +349,7 @@ include 'includes/header.php';
                 </span>
             </div>
             <h2 class="text-2xl font-extrabold tracking-tight">
-                <?php echo ($p['regla_perfil'] == 'LEGADO_120_180') ? '📄 Planilla en Regla Legada (120 Util / 180 Vac)' : '📄 Planilla Oficial (Regla LOTTT 30 Días)'; ?>
+                <?php echo ($p['regla_perfil'] == 'LEGADO_120_180') ? '📄 Liquidación Histórica (120 Util / 180 Vac)' : '📄 Liquidación de Prestaciones Sociales (Regla LOTTT 30 Días)'; ?>
             </h2>
             <p class="text-xs text-slate-300 mt-1 max-w-xl">
                 Seleccione el trabajador y la regla de cálculo deseada. Los datos permanentes se recargan automáticamente.
@@ -387,13 +387,13 @@ include 'includes/header.php';
                 <i class="fa-solid fa-pen-to-square mr-1"></i> Formulario de Datos (Edición)
             </button>
             <button type="button" id="btn-tab-preview" onclick="switchTab('preview')" class="px-5 py-2 text-xs font-extrabold rounded-xl transition-all text-slate-600 hover:text-slate-900">
-                <i class="fa-solid fa-file-invoice mr-1"></i> Vista Previa Planilla Institucional
+                <i class="fa-solid fa-file-invoice mr-1"></i> Vista Previa del Documento
             </button>
         </div>
 
         <div class="flex items-center gap-3">
             <button type="submit" form="form-prestaciones" name="guardar_planilla" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all flex items-center gap-2 text-sm">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar y Calcular Planilla
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Liquidación
             </button>
         </div>
     </div>
@@ -911,7 +911,7 @@ include 'includes/header.php';
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-circle-info text-amber-600 text-lg"></i>
                         <div>
-                            <strong>Deducciones Omitidas:</strong> No se restará ningún concepto al total de asignaciones. En la planilla no se imprimirá la sección de retenciones.
+                            <strong>Deducciones Omitidas:</strong> No se restará ningún concepto al total de asignaciones. En el documento no se imprimirá la sección de retenciones.
                         </div>
                     </div>
                     <button type="button" onclick="document.getElementById('aplicar_deducciones').click()" class="px-3 py-1.5 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-lg font-bold text-xs transition shrink-0 cursor-pointer">
@@ -964,11 +964,11 @@ include 'includes/header.php';
                     <!-- Botones de Acción -->
                     <div class="pt-4 space-y-2">
                         <button type="submit" name="guardar_planilla" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 text-sm">
-                            <i class="fa-solid fa-floppy-disk"></i> Guardar Planilla
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar Liquidación
                         </button>
                         <?php if ($id > 0): ?>
                             <a href="prestaciones_view.php?id=<?php echo $id; ?>" target="_blank" class="w-full bg-brand-blue hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
-                                <i class="fa-solid fa-print"></i> Ver Planilla Oficial Impresa
+                                <i class="fa-solid fa-print"></i> Ver Documento de Liquidación
                             </a>
                         <?php endif; ?>
                     </div>
@@ -978,18 +978,18 @@ include 'includes/header.php';
 
     </div>
 
-    <!-- CONTENEDOR TAB 2: VISTA PREVIA DE LA PLANILLA INSTITUCIONAL -->
+    <!-- CONTENEDOR TAB 2: VISTA PREVIA DEL DOCUMENTO INSTITUCIONAL -->
     <div id="tab-preview" class="hidden bg-white p-6 rounded-2xl shadow-md border border-slate-200">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-200 no-print">
             <div>
                 <h4 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-file-invoice text-brand-blue"></i> Vista Previa de la Planilla Oficial
+                    <i class="fa-solid fa-file-invoice text-brand-blue"></i> Vista Previa de la Liquidación
                 </h4>
-                <p class="text-xs text-slate-500">Planilla institucional PRIME CONTADORES PÚBLICOS conforme a la LOTTT.</p>
+                <p class="text-xs text-slate-500">Documento institucional de PRIME CONTADORES PÚBLICOS conforme a la LOTTT.</p>
             </div>
             <div class="flex items-center gap-2 shrink-0">
                 <button type="button" onclick="window.print()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-                    <i class="fa-solid fa-print"></i> Imprimir Planilla
+                    <i class="fa-solid fa-print"></i> Imprimir Liquidación
                 </button>
                 <?php if ($id > 0): ?>
                     <a href="prestaciones_view.php?id=<?php echo $id; ?>" target="_blank" class="px-4 py-2 bg-brand-blue hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
@@ -1935,7 +1935,7 @@ function syncPreviewTab() {
     // Total Asignaciones
     setT('pv_total_asig', formatVE(getV('total_asignaciones')));
 
-    // Deducciones y visibilidad condicional en la planilla
+    // Deducciones y visibilidad condicional en el documento
     const aplicarDeduc = document.getElementById('aplicar_deducciones')?.checked;
     const deducRows = document.querySelectorAll('.pv-deduccion-row');
     const leftSpacer = document.getElementById('pv_left_spacer');

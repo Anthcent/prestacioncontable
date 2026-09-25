@@ -260,7 +260,7 @@ include 'includes/header.php';
                     📊 Resúmenes Finales y Reportes de Liquidación
                 </h2>
                 <p class="text-xs text-slate-300 mt-1 max-w-2xl">
-                    Consolidado de planillas procesadas, desglose analítico de asignaciones (LOTTT / Gobernación), retenciones y totales netos con filtros avanzados por tiempo y motivos.
+                    Consolidado de liquidaciones procesadas, desglose analítico de asignaciones (LOTTT / Gobernación), retenciones y totales netos con filtros avanzados por tiempo y motivos.
                 </p>
             </div>
 
@@ -287,7 +287,7 @@ include 'includes/header.php';
         <!-- KPI 1: Total Liquidaciones -->
         <div class="glass-card rounded-2xl p-4 border border-slate-200 shadow-sm bg-white/80">
             <div class="flex items-center justify-between">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Planillas Filtradas</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Liquidaciones Filtradas</span>
                 <span class="w-7 h-7 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center text-xs">
                     <i class="fa-solid fa-file-invoice"></i>
                 </span>
@@ -601,7 +601,7 @@ include 'includes/header.php';
                                 <!-- Acciones (no-print) -->
                                 <td class="py-3 px-3 align-middle text-center no-print">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <a href="prestaciones_view.php?id=<?php echo $r['id']; ?>" class="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 text-brand-blue flex items-center justify-center transition-colors" title="Ver Planilla Oficial">
+                                        <a href="prestaciones_view.php?id=<?php echo $r['id']; ?>" class="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 text-brand-blue flex items-center justify-center transition-colors" title="Ver Liquidación">
                                             <i class="fa-solid fa-eye text-xs"></i>
                                         </a>
                                         <a href="prestaciones_form.php?id=<?php echo $r['id']; ?>&empleado_id=<?php echo $r['empleado_id']; ?>" class="w-7 h-7 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-amber-700 flex items-center justify-center transition-colors" title="Editar Cálculo">

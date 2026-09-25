@@ -354,6 +354,27 @@ include 'includes/header.php';
 .excel-grid .border-t-0 { border-top: none !important; }
 .excel-grid .text-red-600 { color: #dc2626 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
+/* Identifica visualmente los datos que deben completarse para la liquidación. */
+#tab-form input:not([type="hidden"]):not([readonly]):not(.nuevo-trabajador-campo),
+#tab-form select:not(.nuevo-trabajador-campo),
+#tab-form textarea:not(.nuevo-trabajador-campo),
+#motivo_trigger_btn {
+    background-color: #fffbeb !important;
+    border-color: #f59e0b !important;
+}
+#tab-form input:not([type="hidden"]):not([readonly]):not(.nuevo-trabajador-campo):focus,
+#tab-form select:not(.nuevo-trabajador-campo):focus,
+#tab-form textarea:not(.nuevo-trabajador-campo):focus,
+#motivo_trigger_btn:focus {
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, .18);
+}
+#nuevo_trabajador_panel input,
+#nuevo_trabajador_panel select {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+}
+
 @media print {
     body * { visibility: hidden; }
     #tab-preview, #tab-preview * { visibility: visible; }
@@ -447,16 +468,26 @@ include 'includes/header.php';
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Seleccionar Trabajador:</label>
-                        <select id="selector_trabajador" onchange="cambiarTrabajador(this.value)" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none bg-slate-50 font-bold text-slate-800 text-sm">
-                            <option value="" <?php echo $empleado_id === 0 && empty($crear_trabajador) ? 'selected' : ''; ?>>— Seleccione un trabajador —</option>
-                            <option value="nuevo" <?php echo !empty($crear_trabajador) ? 'selected' : ''; ?>>＋ Agregar un nuevo trabajador</option>
-                            <?php foreach ($empleados_list as $e_item): ?>
-                                <option value="<?php echo $e_item['id']; ?>" <?php echo ($e_item['id'] == $empleado_id) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($e_item['cedula']) . " — " . htmlspecialchars($e_item['apellidos_nombres']) . " (" . htmlspecialchars($e_item['cargo']) . ")"; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="mt-2 text-xs text-slate-500">Puede seleccionar un trabajador registrado o crearlo sin salir de esta liquidación.</p>
+                        <div class="rounded-2xl border border-slate-300 bg-white p-2 shadow-sm">
+                            <div class="relative mb-2">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-xs"></i>
+                                <input type="search" id="buscar_trabajador" oninput="filtrarTrabajadores(this.value)" placeholder="Buscar por nombre o cédula..." autocomplete="off" class="w-full py-2.5 pl-9 pr-3 border rounded-xl text-sm font-semibold outline-none">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+                                <select id="selector_trabajador" onchange="cambiarTrabajador(this.value)" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-brand-blue outline-none font-bold text-slate-800 text-sm">
+                                    <option value="" <?php echo $empleado_id === 0 ? 'selected' : ''; ?>>— Seleccione un trabajador —</option>
+                                    <?php foreach ($empleados_list as $e_item): ?>
+                                        <option value="<?php echo $e_item['id']; ?>" <?php echo ($e_item['id'] == $empleado_id) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($e_item['cedula']) . " — " . htmlspecialchars($e_item['apellidos_nombres']) . " (" . htmlspecialchars($e_item['cargo']) . ")"; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button type="button" onclick="cambiarTrabajador('nuevo')" class="bg-slate-900 hover:bg-blue-950 text-white px-4 py-3 rounded-xl font-extrabold text-xs transition-colors shadow flex items-center justify-center gap-2 whitespace-nowrap">
+                                    <i class="fa-solid fa-user-plus text-brand-yellow"></i> Agregar nuevo trabajador
+                                </button>
+                            </div>
+                            <p id="resultado_busqueda_trabajador" class="mt-2 px-1 text-xs text-slate-500">Escriba una cédula o un nombre para reducir la lista.</p>
+                        </div>
                     </div>
 
                     <div id="nuevo_trabajador_panel" class="md:col-span-2 <?php echo !empty($crear_trabajador) ? '' : 'hidden'; ?> rounded-2xl border border-blue-200 bg-blue-50/60 p-4 sm:p-5">
@@ -1608,6 +1639,33 @@ include 'includes/header.php';
 </div>
 
 <script class="no-print">
+let opcionesTrabajadores = [];
+
+function filtrarTrabajadores(consulta) {
+    const selector = document.getElementById('selector_trabajador');
+    const resultado = document.getElementById('resultado_busqueda_trabajador');
+    if (!selector) return;
+
+    const termino = consulta.trim().toLocaleLowerCase('es');
+    const coincidencias = opcionesTrabajadores.filter(item => item.texto.toLocaleLowerCase('es').includes(termino));
+    const seleccionado = selector.value;
+    selector.innerHTML = '<option value="">— Seleccione un trabajador —</option>';
+    coincidencias.forEach(item => {
+        const opcion = document.createElement('option');
+        opcion.value = item.valor;
+        opcion.textContent = item.texto;
+        opcion.selected = item.valor === seleccionado;
+        selector.appendChild(opcion);
+    });
+
+    if (resultado) {
+        resultado.textContent = termino
+            ? `${coincidencias.length} trabajador${coincidencias.length === 1 ? '' : 'es'} encontrado${coincidencias.length === 1 ? '' : 's'}.`
+            : 'Escriba una cédula o un nombre para reducir la lista.';
+        resultado.classList.toggle('text-rose-600', termino !== '' && coincidencias.length === 0);
+    }
+}
+
 function cambiarTrabajador(valor) {
     const panel = document.getElementById('nuevo_trabajador_panel');
     const empleadoId = document.getElementById('empleado_id');
@@ -1615,6 +1673,7 @@ function cambiarTrabajador(valor) {
     const fechaIngreso = document.getElementById('fecha_ingreso');
 
     if (valor === 'nuevo') {
+        document.getElementById('selector_trabajador').value = '';
         empleadoId.value = '0';
         crear.value = '1';
         panel.classList.remove('hidden');
@@ -1649,6 +1708,11 @@ function actualizarClasificacionNueva() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    const selector = document.getElementById('selector_trabajador');
+    opcionesTrabajadores = selector
+        ? Array.from(selector.options).filter(opcion => opcion.value).map(opcion => ({ valor: opcion.value, texto: opcion.textContent.trim() }))
+        : [];
+
     const esNuevo = document.getElementById('crear_trabajador')?.value === '1';
     document.querySelectorAll('.nuevo-trabajador-campo').forEach(campo => campo.disabled = !esNuevo);
     actualizarClasificacionNueva();

@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         actualizarBadgesSugerenciasPrimas(t.y, sbm);
 
-        // Días base anual de vacaciones (Art. 190 y 196 LOTTT):
-        // 15 días base. A partir de 1 año y 6 meses (+1 día adicional = 16), a 2 años y 6 meses (+2 días = 17), hasta máx 15 adicionales (30 días).
+        // Días de vacaciones del año de servicio en curso (Art. 190 y 196 LOTTT):
+        // 15 días base + 1 por cada año cumplido. Ej.: 8 años y 4 meses cursan el 9.º año = 23 días. Máximo: 30.
         let dias_adicionales_vac = Math.min(15, Math.max(0, t.y));
         let dias_vac_legales = 15 + dias_adicionales_vac;
         if (dias_vac_legales > 30) dias_vac_legales = 30;
@@ -547,5 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.aplicarDiasVacLegales = aplicarDiasVacLegales;
     window.calculateAll = calculateAll;
 
-    calculateAll();
+    // Al abrir el formulario, normalizar valores antiguos o guardados manualmente
+    // con la cantidad legal correspondiente al año de servicio en curso.
+    autoCalcularDiasLegales(false);
 });

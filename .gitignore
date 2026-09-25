@@ -1,0 +1,30 @@
+# Archivos locales de Codex
+.atl/
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+
+# Respaldos y temporales
+*.bak
+*.tmp
+*.log
+
+# Datos y documentos fuente que pueden contener información personal
+*.xls
+*.xlsx
+excel_report*.txt
+sheet_*_layout.txt
+
+# Dependencias y artefactos
+vendor/
+node_modules/
+dist/
+build/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

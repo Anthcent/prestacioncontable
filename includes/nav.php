@@ -1,23 +1,26 @@
 <!-- Nav Sidebar -->
-<aside id="appSidebar" class="fixed inset-y-0 left-0 w-[min(82vw,18rem)] lg:w-64 lg:relative bg-gradient-to-b from-brand-dark to-[#001a33] text-white flex flex-col h-full shadow-[4px_0_24px_rgba(0,0,0,0.15)] no-print z-50 lg:z-20 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out border-r border-white/5">
+<aside id="appSidebar" class="fixed inset-y-0 left-0 w-[min(82vw,18rem)] lg:w-64 lg:relative bg-gradient-to-b from-brand-dark to-[#001a33] text-white flex flex-col h-full shadow-[4px_0_24px_rgba(0,0,0,0.15)] no-print z-50 lg:z-20 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out border-r border-white/5">
     <!-- Overlay de patrón sutil -->
     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-100 pointer-events-none"></div>
     
     <!-- Logo Area -->
     <button type="button" onclick="toggleMobileNav(false)" class="lg:hidden absolute top-4 right-4 z-30 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <button id="desktopSidebarToggle" type="button" onclick="toggleDesktopSidebar()" class="hidden lg:flex absolute -right-3.5 top-5 z-40 w-7 h-7 rounded-full bg-brand-yellow text-brand-dark border-2 border-white shadow-lg items-center justify-center hover:scale-110 transition-transform" aria-label="Plegar barra lateral" title="Plegar / desplegar menú">
+        <i id="desktopSidebarArrow" class="fa-solid fa-chevron-left text-[10px]"></i>
+    </button>
     <div class="relative p-5 lg:p-6 flex flex-col items-center justify-center border-b border-white/10 z-10">
         <a href="index.php" class="flex flex-col items-center group">
             <div class="relative w-16 h-16 rounded-2xl bg-white/95 p-2 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(212,175,55,0.35)] border border-amber-400/30 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all duration-300">
                 <img src="assets/img/logo_icon.png" alt="PRIME Emblem" class="w-full h-full object-contain filter drop-shadow-sm">
             </div>
-            <div class="text-center">
+            <div class="text-center sidebar-copy">
                 <div class="text-xl font-black tracking-wider text-white flex items-center justify-center gap-1 drop-shadow-md">
                     <span>PR<span class="text-amber-400">I</span>ME</span>
                 </div>
                 <p class="text-[9px] tracking-[0.2em] text-slate-300 uppercase font-semibold mt-0.5">CONTADORES PÚBLICOS</p>
             </div>
         </a>
-        <div class="flex items-center gap-2 mt-3 bg-black/40 px-3 py-1 rounded-full border border-amber-400/20 backdrop-blur-sm shadow-inner">
+        <div class="sidebar-copy flex items-center gap-2 mt-3 bg-black/40 px-3 py-1 rounded-full border border-amber-400/20 backdrop-blur-sm shadow-inner">
             <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
@@ -31,7 +34,7 @@
         <!-- BOTÓN DESTACADO PRINCIPAL -->
         <div class="px-4 mb-5">
             <a href="prestaciones_form.php" class="w-full bg-gradient-to-r from-brand-yellow to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-brand-dark font-extrabold py-3 px-4 rounded-xl shadow-lg hover:shadow-yellow-500/20 transition-all duration-300 flex items-center justify-center gap-2 text-xs tracking-wider uppercase">
-                <i class="fa-solid fa-plus text-sm"></i> Generar Nueva Hoja
+                <i class="fa-solid fa-plus text-sm"></i> <span class="sidebar-copy">Generar Nueva Hoja</span>
             </a>
         </div>
 
@@ -115,7 +118,7 @@
                     <i class="fa-solid fa-user-shield text-[10px] text-brand-yellow"></i>
                     <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-brand-dark rounded-full"></div>
                 </div>
-                <div>
+                <div class="sidebar-copy">
                     <p class="text-xs font-semibold text-white tracking-wide"><?php echo htmlspecialchars(currentUser()['nombre'] ?? 'Usuario'); ?></p>
                     <p class="text-[10px] text-slate-400"><?php echo isAdmin() ? 'Administrador' : 'Usuario'; ?></p>
                 </div>
@@ -139,5 +142,19 @@
 }
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.25);
+}
+@media (min-width: 1024px) {
+    body.sidebar-collapsed #appSidebar { width: 5rem !important; }
+    body.sidebar-collapsed #appSidebar .sidebar-copy,
+    body.sidebar-collapsed #appSidebar nav a > span,
+    body.sidebar-collapsed #appSidebar nav > div { display: none !important; }
+    body.sidebar-collapsed #appSidebar nav { padding-left: .75rem; padding-right: .75rem; }
+    body.sidebar-collapsed #appSidebar nav a { justify-content: center; padding-left: .5rem; padding-right: .5rem; }
+    body.sidebar-collapsed #appSidebar .relative.p-5,
+    body.sidebar-collapsed #appSidebar .relative.p-6 { padding-left: .5rem; padding-right: .5rem; }
+    body.sidebar-collapsed #appSidebar .w-16.h-16 { width: 3rem; height: 3rem; margin-bottom: 0; }
+    body.sidebar-collapsed #appSidebar .px-4 { padding-left: .75rem; padding-right: .75rem; }
+    body.sidebar-collapsed #appSidebar form { margin: 0 auto; }
+    body.sidebar-collapsed #desktopSidebarArrow { transform: rotate(180deg); }
 }
 </style>

@@ -85,6 +85,21 @@
         @media (max-width: 639px) {
             .glass-card { border-radius: 1rem; }
             input, select, textarea, button { max-width: 100%; }
+            #quickDockPanel { width: min(88vw, 21rem) !important; }
+            #quickDockTrigger {
+                left: -2.75rem !important;
+                top: auto !important;
+                bottom: 5.25rem !important;
+                width: 2.75rem;
+                height: 2.75rem;
+                padding: .4rem !important;
+                border-radius: .9rem 0 0 .9rem !important;
+            }
+            #quickDockTrigger .quick-dock-label,
+            #quickDockTrigger > span.text-\[10px\] { display: none !important; }
+            #quickDockTrigger > div,
+            #quickDockTrigger > span:first-child { width: 1.75rem !important; height: 1.75rem !important; }
+            #quickDockArrow { display: none; }
         }
 
         /* Ocultar barra lateral e imprimir limpio en modo impresión */

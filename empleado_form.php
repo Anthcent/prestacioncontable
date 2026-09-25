@@ -1,5 +1,8 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+requireLogin();
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $emp = [

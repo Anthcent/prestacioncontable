@@ -1,5 +1,8 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+requireLogin();
 
 // Manejar eliminación de cálculo
 if(isset($_GET['delete'])) {

@@ -1,5 +1,8 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+requireLogin();
 require_once 'includes/PrestacionesCalculator.php';
 
 // Asegurar que todas las columnas requeridas existan en la BD automáticamente

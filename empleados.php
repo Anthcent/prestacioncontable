@@ -1,5 +1,8 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+requireLogin();
 
 // Manejar creación / edición mediante el Modal Wizard (o formulario)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_empleado'])) {
@@ -779,4 +782,3 @@ if (searchInputEl) {
 </script>
 
 <?php include 'includes/footer.php'; ?>
-

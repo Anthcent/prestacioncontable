@@ -91,12 +91,18 @@
                 </p>
             </div>
             
+            <?php if (isAdmin()): ?>
             <a href="parametros.php" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 <?php echo (basename($_SERVER['PHP_SELF']) == 'parametros.php') ? 'bg-gradient-to-r from-brand-blue/60 to-transparent text-white font-medium border-l-4 border-brand-yellow shadow-lg' : 'border-l-4 border-transparent hover:border-slate-500/50 hover:translate-x-1'; ?>">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo (basename($_SERVER['PHP_SELF']) == 'parametros.php') ? 'bg-brand-yellow text-brand-dark shadow-[0_0_12px_rgba(255,204,0,0.5)]' : 'bg-black/20 group-hover:bg-black/40 text-slate-400 group-hover:text-brand-yellow transition-colors'; ?>">
                     <i class="fa-solid fa-cogs text-sm"></i>
                 </div>
                 <span class="text-sm">Parámetros Legales</span>
             </a>
+            <a href="usuarios.php" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 <?php echo (basename($_SERVER['PHP_SELF']) == 'usuarios.php') ? 'bg-gradient-to-r from-brand-blue/60 to-transparent text-white font-medium border-l-4 border-brand-yellow shadow-lg' : 'border-l-4 border-transparent hover:border-slate-500/50 hover:translate-x-1'; ?>">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-black/20 group-hover:bg-black/40 text-slate-400 group-hover:text-brand-yellow transition-colors"><i class="fa-solid fa-user-gear text-sm"></i></div>
+                <span class="text-sm">Usuarios</span>
+            </a>
+            <?php endif; ?>
         </nav>
     </div>
     
@@ -109,11 +115,11 @@
                     <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-brand-dark rounded-full"></div>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold text-white tracking-wide">Administrador</p>
-                    <p class="text-[10px] text-slate-400">Acceso Total</p>
+                    <p class="text-xs font-semibold text-white tracking-wide"><?php echo htmlspecialchars(currentUser()['nombre'] ?? 'Usuario'); ?></p>
+                    <p class="text-[10px] text-slate-400"><?php echo isAdmin() ? 'Administrador' : 'Usuario'; ?></p>
                 </div>
             </div>
-            <div class="text-[9px] font-mono font-bold text-slate-500 bg-black/40 px-2 py-1 rounded shadow-inner border border-white/5">v1.0</div>
+            <form method="post" action="logout.php"><input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrfToken()); ?>"><button type="submit" class="w-8 h-8 rounded-lg bg-black/30 hover:bg-red-600 text-slate-300 hover:text-white transition" title="Cerrar sesión"><i class="fa-solid fa-right-from-bracket"></i></button></form>
         </div>
     </div>
 </aside>

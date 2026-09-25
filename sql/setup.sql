@@ -1,6 +1,19 @@
 CREATE DATABASE IF NOT EXISTS sistema_distal;
 USE sistema_distal;
 
+-- Usuarios y roles del sistema
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(120) NOT NULL,
+  usuario VARCHAR(80) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  rol ENUM('admin', 'usuario') NOT NULL DEFAULT 'usuario',
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  ultimo_acceso DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- Empleados
 CREATE TABLE IF NOT EXISTS empleados (
   id INT PRIMARY KEY AUTO_INCREMENT,

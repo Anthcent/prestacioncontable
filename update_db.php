@@ -1,4 +1,9 @@
 <?php
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $host = 'localhost';
 $username = 'root';
 $password = '';
@@ -101,6 +106,18 @@ try {
     ";
     $pdo->exec($sql);
 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS usuarios (
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      nombre VARCHAR(120) NOT NULL,
+      usuario VARCHAR(80) UNIQUE NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      rol ENUM('admin', 'usuario') NOT NULL DEFAULT 'usuario',
+      activo TINYINT(1) NOT NULL DEFAULT 1,
+      ultimo_acceso DATETIME NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )");
+
     // 4. Columnas adicionales en prestaciones si no existen
     $columns = [
         "regla_perfil" => "VARCHAR(50) DEFAULT 'LOTTT_30'",
@@ -129,5 +146,3 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
-
-

@@ -1,5 +1,8 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+requireLogin();
 require_once 'includes/PrestacionesCalculator.php';
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';

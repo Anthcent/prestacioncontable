@@ -2,6 +2,13 @@
 // ajax_motivos.php
 header('Content-Type: application/json; charset=utf-8');
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+ensureUsersTable($pdo);
+if (!currentUser()) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Sesión requerida.']);
+    exit;
+}
 
 // Asegurar que la tabla exista
 try {

@@ -76,7 +76,7 @@ include 'includes/header.php';
 <!-- CABECERA DEL MÓDULO (Limpia y Ejecutiva) -->
 <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
     <div>
-        <div class="flex items-center gap-2 mb-1.5">
+        <div class="flex flex-wrap items-center gap-2 mb-1.5">
             <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black bg-blue-100 text-brand-blue border border-blue-200">
                 <i class="fa-solid fa-calculator"></i> Módulo de Prestaciones Sociales
             </span>
@@ -93,10 +93,10 @@ include 'includes/header.php';
     </div>
 
     <!-- Navegación contextual superior -->
-    <div class="flex items-center gap-3 no-print">
+    <div class="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch sm:items-center gap-2 sm:gap-3 no-print w-full xl:w-auto">
         <button onclick="toggleQuickDock()" type="button" class="bg-white hover:bg-slate-100 text-slate-800 font-extrabold px-3.5 py-2.5 rounded-xl border border-slate-300 shadow-sm hover:shadow transition-all flex items-center gap-2 text-sm cursor-pointer" title="Abrir panel lateral de accesos rápidos (Presiona Barra Espaciadora)">
             <i class="fa-solid fa-bolt text-brand-yellow"></i> Accesos Rápidos
-            <span class="text-[10px] font-mono text-slate-400 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">Espacio</span>
+            <span class="hidden sm:inline text-[10px] font-mono text-slate-400 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">Espacio</span>
         </button>
         <a href="catalogo.php" class="bg-white hover:bg-slate-100 text-slate-800 font-extrabold px-4 py-2.5 rounded-xl border border-slate-300 shadow-sm hover:shadow transition-all flex items-center gap-2 text-sm">
             <i class="fa-solid fa-folder-open text-brand-blue"></i> Explorar Catálogo

@@ -29,12 +29,12 @@ $prestaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 include 'includes/header.php'; 
 ?>
 
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
     <div>
         <h2 class="text-2xl font-bold text-slate-800">Cálculos de Prestaciones</h2>
         <p class="text-slate-500">Historial de planillas generadas</p>
     </div>
-    <div class="flex gap-2">
+    <div class="grid grid-cols-1 sm:flex gap-2 w-full sm:w-auto">
         <a href="catalogo.php" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition-colors flex items-center gap-2 text-sm font-bold">
             <i class="fa-solid fa-folder-open"></i> Catálogo Mosaico
         </a>

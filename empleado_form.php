@@ -69,7 +69,7 @@ include 'includes/header.php';
     </div>
 <?php endif; ?>
 
-<form method="POST" action="" class="glass-card rounded-xl p-8 max-w-4xl mx-auto shadow-sm">
+<form method="POST" action="" class="glass-card rounded-xl p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto shadow-sm">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Fila 1 -->
         <div class="space-y-2">

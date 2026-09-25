@@ -46,7 +46,7 @@ include 'includes/header.php';
         <p class="text-xs text-slate-500">Gestión unificada de planillas de prestaciones sociales de PRIME CONTADORES PÚBLICOS</p>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="grid grid-cols-1 sm:flex gap-2 sm:gap-3 w-full lg:w-auto">
         <a href="export_excel.php?lote=all" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow transition-colors flex items-center gap-2 text-sm">
             <i class="fa-solid fa-file-excel"></i> Exportar Libro Excel Consolidado
         </a>
@@ -58,8 +58,8 @@ include 'includes/header.php';
 
 <!-- BARRA DE BÚSQUEDA Y CONMUTADOR DE VISTAS -->
 <div class="glass-card rounded-2xl p-4 mb-6 shadow-sm flex flex-wrap justify-between items-center gap-4 no-print border border-slate-200">
-    <form method="GET" action="catalogo.php" class="flex gap-2 flex-1 max-w-md">
-        <div class="relative w-full">
+    <form method="GET" action="catalogo.php" class="flex flex-wrap sm:flex-nowrap gap-2 flex-1 w-full lg:max-w-md">
+        <div class="relative w-full min-w-0 sm:flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
             <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Buscar por Cédula, Empleado o Cargo..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none text-sm">
         </div>
@@ -69,7 +69,7 @@ include 'includes/header.php';
         <?php endif; ?>
     </form>
 
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
         <span class="text-xs text-slate-500 font-bold uppercase">Vista:</span>
         <div class="bg-slate-200 p-1 rounded-xl flex gap-1">
             <button type="button" id="btn-view-cards" onclick="setView('cards')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-brand-blue shadow">

@@ -16,7 +16,7 @@ $prestaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 include 'includes/header.php';
 ?>
 
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
     <div>
         <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
             <i class="fa-solid fa-layer-group text-brand-blue"></i> Gestión de Lotes de Liquidación
@@ -32,7 +32,7 @@ include 'includes/header.php';
 
 <form method="GET" action="export_excel.php" id="form-lote">
     <div class="glass-card rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-        <div class="px-6 py-4 border-b border-slate-200 bg-white/50 flex justify-between items-center">
+        <div class="px-4 sm:px-6 py-4 border-b border-slate-200 bg-white/50 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div class="flex items-center gap-3">
                 <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)" class="w-4 h-4 text-brand-blue rounded">
                 <label for="select-all" class="font-bold text-sm text-slate-700 cursor-pointer">Seleccionar Todos</label>

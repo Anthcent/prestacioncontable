@@ -1,10 +1,11 @@
 <!-- Nav Sidebar -->
-<aside class="w-64 bg-gradient-to-b from-brand-dark to-[#001a33] text-white flex flex-col h-full shadow-[4px_0_24px_rgba(0,0,0,0.15)] no-print z-20 transition-all duration-300 relative border-r border-white/5">
+<aside id="appSidebar" class="fixed inset-y-0 left-0 w-[min(82vw,18rem)] lg:w-64 lg:relative bg-gradient-to-b from-brand-dark to-[#001a33] text-white flex flex-col h-full shadow-[4px_0_24px_rgba(0,0,0,0.15)] no-print z-50 lg:z-20 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out border-r border-white/5">
     <!-- Overlay de patrón sutil -->
     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-100 pointer-events-none"></div>
     
     <!-- Logo Area -->
-    <div class="relative p-6 flex flex-col items-center justify-center border-b border-white/10 z-10">
+    <button type="button" onclick="toggleMobileNav(false)" class="lg:hidden absolute top-4 right-4 z-30 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="relative p-5 lg:p-6 flex flex-col items-center justify-center border-b border-white/10 z-10">
         <a href="index.php" class="flex flex-col items-center group">
             <div class="relative w-16 h-16 rounded-2xl bg-white/95 p-2 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(212,175,55,0.35)] border border-amber-400/30 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all duration-300">
                 <img src="assets/img/logo_icon.png" alt="PRIME Emblem" class="w-full h-full object-contain filter drop-shadow-sm">

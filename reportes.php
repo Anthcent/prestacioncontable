@@ -245,10 +245,10 @@ include 'includes/header.php';
     </div>
 
     <!-- BANNER SUPERIOR CORPORATIVO -->
-    <div class="bg-gradient-to-r from-brand-dark via-slate-900 to-brand-blue text-white rounded-2xl p-6 mb-6 shadow-xl relative overflow-hidden no-print">
+    <div class="bg-gradient-to-r from-brand-dark via-slate-900 to-brand-blue text-white rounded-2xl p-4 sm:p-6 mb-6 shadow-xl relative overflow-hidden no-print">
         <div class="relative z-10 flex flex-wrap justify-between items-center gap-4">
             <div>
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
                     <span class="bg-brand-yellow text-brand-dark font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
                         MÓDULO DE REPORTES Y AUDITORÍA
                     </span>
@@ -264,7 +264,7 @@ include 'includes/header.php';
                 </p>
             </div>
 
-            <div class="flex items-center gap-2.5">
+            <div class="grid grid-cols-1 sm:flex items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
                 <!-- Botón Imprimir -->
                 <button type="button" onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2.5 rounded-xl border border-white/20 shadow text-xs transition-all flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-print text-amber-400"></i> Imprimir Reporte

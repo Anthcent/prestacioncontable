@@ -61,7 +61,7 @@ include 'includes/header.php';
 <?php endif; ?>
 
 <div class="glass-card rounded-xl overflow-hidden shadow-sm">
-    <div class="px-6 py-4 border-b border-slate-200 bg-white/50 flex items-center justify-between">
+    <div class="px-4 sm:px-6 py-4 border-b border-slate-200 bg-white/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h3 class="font-semibold text-slate-800 flex items-center gap-2">
             <i class="fa-solid fa-scale-balanced text-brand-blue"></i> Valores de Referencia
         </h3>

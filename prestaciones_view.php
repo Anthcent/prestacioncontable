@@ -34,7 +34,7 @@ function f6($num) {
     return number_format((float)$num, 6, ',', '.');
 }
 function f4($num) {
-    return number_format((float)$num, 4, ',', '.');
+    return number_format((float)$num, 2, ',', '.');
 }
 
 $t_y = $calc_results['tiempo']['y'] ?? 0;
@@ -299,7 +299,7 @@ $t_meses = $calc_results['tiempo']['total_months'] ?? 0;
                 <td class="font-bold text-center bg-gray-100">Total</td>
             </tr>
             <tr>
-                <td colspan="3" class="font-bold">Articulo 131 y 132 LOTTT</td>
+                <td colspan="3" class="font-bold">Articulo 131, 132 y 136 LOTTT</td>
                 <td class="text-center font-bold"><?php echo f4($calc_results['util_alicuota']); ?></td>
                 <td class="text-center font-bold"><?php echo fb($p['util_dias']); ?></td>
                 <td class="text-right font-bold"><?php echo fb($calc_results['util_salario_normal_vac']); ?></td>

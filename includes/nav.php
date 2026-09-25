@@ -22,7 +22,7 @@
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
             </span>
-            <p class="text-[10px] text-amber-200 uppercase tracking-wider font-semibold">Sistema de Planillas</p>
+            <p class="text-[9px] text-amber-200 uppercase tracking-wider font-semibold text-center">Cálculo de Prestaciones Sociales</p>
         </div>
     </div>
     
@@ -54,7 +54,7 @@
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center <?php echo (strpos(basename($_SERVER['PHP_SELF']), 'empleado') !== false) ? 'bg-brand-yellow text-brand-dark shadow-[0_0_12px_rgba(255,204,0,0.5)]' : 'bg-black/20 group-hover:bg-black/40 text-slate-400 group-hover:text-brand-yellow transition-colors'; ?>">
                     <i class="fa-solid fa-users text-sm"></i>
                 </div>
-                <span class="text-sm">Empleados</span>
+                <span class="text-sm">Trabajadores</span>
             </a>
             
             <a href="prestaciones.php" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 <?php echo (strpos(basename($_SERVER['PHP_SELF']), 'prestaciones') !== false) ? 'bg-gradient-to-r from-brand-blue/60 to-transparent text-white font-medium border-l-4 border-brand-yellow shadow-lg' : 'border-l-4 border-transparent hover:border-slate-500/50 hover:translate-x-1'; ?>">

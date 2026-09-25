@@ -79,15 +79,7 @@ class PrestacionesCalculator {
 
         // Días base anual de vacaciones (Art. 190 y 196 LOTTT):
         // 15 días base. A partir de 1 año y 6 meses (+1 día adicional = 16), a 2 años y 6 meses (+2 días = 17), hasta máx 15 adicionales (30 días).
-        $dias_adicionales_vac = 0;
-        if ($t['y'] >= 1) {
-            if ($t['m'] >= 6) {
-                $dias_adicionales_vac = $t['y'];
-            } else {
-                $dias_adicionales_vac = max(0, $t['y'] - 1);
-            }
-        }
-        $dias_adicionales_vac = min(15, $dias_adicionales_vac);
+        $dias_adicionales_vac = min(15, max(0, $t['y']));
         $dias_vac_legales = 15 + $dias_adicionales_vac;
         if ($dias_vac_legales > 30) {
             $dias_vac_legales = 30;
@@ -101,11 +93,11 @@ class PrestacionesCalculator {
 
         // Cálculo de Alícuotas según fórmula oficial del Excel (Gobernación / LOTTT)
         // Alícuota Diaria de Vacaciones: D29 = G23 * C29 / 360
-        $alic_v = self::round6(($sdn_exact * $dv) / 360);
+        $alic_v = self::round2(($sdn_exact * $dv) / 360);
 
         // Alícuota Diaria de Utilidades: D27 = (G23 + D29) * C27 / 360
         // (Sueldo Normal Diario + Alícuota de Vacaciones) * Días Utilidades / 360
-        $alic_u = self::round6((($sdn_exact + $alic_v) * $du) / 360);
+        $alic_u = self::round2((($sdn_exact + $alic_v) * $du) / 360);
 
         // Salario Integral (Fórmula oficial Excel: G24 = G23 + D27 + D29, G27 = G24 * 30)
         $sim = self::round2($smn + ($alic_u * 30) + ($alic_v * 30));
@@ -118,7 +110,7 @@ class PrestacionesCalculator {
         }
 
         // Auto-días si no vienen forzados manualmente
-        // Utilidades (Art. 131 y 132 LOTTT)
+        // Utilidades (Art. 131, 132 y 136 LOTTT)
         $u_dias = isset($inputs['util_dias']) && (float)$inputs['util_dias'] > 0 
             ? (float)$inputs['util_dias'] 
             : self::round2(($du / 12) * $meses_fraccion);
@@ -140,14 +132,10 @@ class PrestacionesCalculator {
         // 30 días de salario integral por cada año de servicio o fracción SUPERIOR a 6 meses.
         // Si tiene 6 meses o menos (<= 6 meses), no redondea.
         // Si tiene fracción superior a 6 meses (> 6 meses o 6 meses con días excedentes), suma 1 año (+30 días).
-        $fraccion_superior_6_antig = ($t['m'] > 6) || ($t['m'] == 6 && $t['d'] > 0);
-        $antig_anos_default = $t['y'] + ($fraccion_superior_6_antig ? 1 : 0);
-        $antig_anos = isset($inputs['antig_anos']) && $inputs['antig_anos'] !== '' 
-            ? (float)$inputs['antig_anos'] 
-            : $antig_anos_default;
-
-        $antig_nro_dias = (float)($inputs['antig_nro_dias'] ?? 0);
-        $antig_nro_meses = (float)($inputs['antig_nro_meses'] ?? $t['total_months']);
+        $meses_fraccion_antig = min(6, max(0, $t['m']));
+        $antig_anos = (float)$t['y'];
+        $antig_nro_dias = (float)($meses_fraccion_antig * 5);
+        $antig_nro_meses = (float)($t['m'] >= 6 ? 0 : $t['m']);
 
         // Montos de asignaciones con precisión interna Excel
         $util_snv_exact = $sdn_exact + $alic_v;

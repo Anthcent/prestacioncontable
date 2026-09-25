@@ -88,7 +88,7 @@ echo "\xEF\xBB\xBF";
     $t_d = $calc['tiempo']['d'] ?? 0;
     $t_meses = $calc['tiempo']['total_months'] ?? 0;
     function xf($num) { return number_format((float)$num, 2, ',', '.'); }
-    function xf4($num) { return number_format((float)$num, 4, ',', '.'); }
+    function xf4($num) { return number_format((float)$num, 2, ',', '.'); }
     ?>
     <table>
         <!-- Cabecera Institucional -->
@@ -241,7 +241,7 @@ echo "\xEF\xBB\xBF";
             <td class="font-bold text-center" style="background-color: #f1f5f9;">Total</td>
         </tr>
         <tr>
-            <td colspan="3" class="font-bold">Articulo 131 y 132 LOTTT</td>
+            <td colspan="3" class="font-bold">Articulo 131, 132 y 136 LOTTT</td>
             <td class="text-center font-bold"><?php echo xf4($calc['util_alicuota']); ?></td>
             <td class="text-center font-bold"><?php echo xf($p['util_dias']); ?></td>
             <td class="text-right font-bold"><?php echo xf($calc['util_salario_normal_vac']); ?></td>

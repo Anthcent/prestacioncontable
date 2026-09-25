@@ -23,11 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function formatVE4(num) {
         let val = parseFloat(num);
-        if (isNaN(val) || !isFinite(val)) return '0,0000';
+        if (isNaN(val) || !isFinite(val)) return '0,00';
         try {
-            return val.toLocaleString('es-VE', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+            return val.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         } catch(e) {
-            let parts = val.toFixed(4).split('.');
+            let parts = val.toFixed(2).split('.');
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             return parts.join(',');
         }
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function setVal6(id, val) {
         const el = document.getElementById(id);
-        if(el) el.value = (isNaN(val) || !isFinite(val) ? 0 : val).toFixed(6);
+        if(el) el.value = (isNaN(val) || !isFinite(val) ? 0 : val).toFixed(2);
     }
 
     function setText(id, text) {
@@ -118,8 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setText('lbl_tiempo_servicio', `${t.y} Años, ${t.m} Meses, ${t.d} Días`);
         
         setText('t_meses_total', t.total_months);
-        if(document.getElementById('antig_nro_meses')) document.getElementById('antig_nro_meses').value = t.total_months;
-        setText('lbl_antig_meses', t.total_months);
+        const mesesAntig = Math.min(6, Math.max(0, t.m));
+        if(document.getElementById('antig_nro_meses')) document.getElementById('antig_nro_meses').value = t.m >= 6 ? 0 : t.m;
+        if(document.getElementById('antig_nro_dias')) document.getElementById('antig_nro_dias').value = mesesAntig * 5;
+        if(document.getElementById('antig_anos')) document.getElementById('antig_anos').value = t.y;
+        setText('lbl_antig_meses', t.m >= 6 ? 0 : t.m);
 
         // Sueldos Normales
         let sbm = getVal('sueldo_base_mensual');
@@ -145,15 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Días base anual de vacaciones (Art. 190 y 196 LOTTT):
         // 15 días base. A partir de 1 año y 6 meses (+1 día adicional = 16), a 2 años y 6 meses (+2 días = 17), hasta máx 15 adicionales (30 días).
-        let dias_adicionales_vac = 0;
-        if (t.y >= 1) {
-            if (t.m >= 6) {
-                dias_adicionales_vac = t.y;
-            } else {
-                dias_adicionales_vac = Math.max(0, t.y - 1);
-            }
-        }
-        dias_adicionales_vac = Math.min(15, dias_adicionales_vac);
+        let dias_adicionales_vac = Math.min(15, Math.max(0, t.y));
         let dias_vac_legales = 15 + dias_adicionales_vac;
         if (dias_vac_legales > 30) dias_vac_legales = 30;
         window.diasVacLegalesActuales = dias_vac_legales;
@@ -199,16 +194,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Antigüedad (Art. 142 literal C LOTTT):
             // 30 días por año de servicio o fracción SUPERIOR a 6 meses.
             // 6 meses o menos no redondea; más de 6 meses (ej. 7 meses) suma +1 año (+30 días).
-            let fraccion_superior_6_antig = (t.m > 6) || (t.m === 6 && t.d > 0);
-            let antig_pagar = t.y + (fraccion_superior_6_antig ? 1 : 0);
-            if(document.getElementById('antig_anos')) document.getElementById('antig_anos').value = antig_pagar;
+            let mesesAntigFecha = Math.min(6, Math.max(0, t.m));
+            if(document.getElementById('antig_anos')) document.getElementById('antig_anos').value = t.y;
+            if(document.getElementById('antig_nro_meses')) document.getElementById('antig_nro_meses').value = t.m >= 6 ? 0 : t.m;
+            if(document.getElementById('antig_nro_dias')) document.getElementById('antig_nro_dias').value = mesesAntigFecha * 5;
         }
 
         let sdn_exact = smn / 30;
 
         // Alicuotas (Conforme a fórmula oficial Excel Gobernación: D29 = G23*C29/360 y D27 = (G23+D29)*C27/360)
-        let alic_v = round6((sdn_exact * dv) / 360);
-        let alic_u = round6(((sdn_exact + alic_v) * du) / 360);
+        let alic_v = round2((sdn_exact * dv) / 360);
+        let alic_u = round2(((sdn_exact + alic_v) * du) / 360);
         
         setVal6('alicuota_utilidades', alic_u);
         setVal6('alicuota_vacaciones', alic_v);
@@ -222,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setText('disp_salario_integral_mensual', formatVE(sim));
         setVal('antig_salario_integral_mensual', sim);
 
-        // Utilidades (Art. 131 y 132 LOTTT)
+        // Utilidades (Art. 131, 132 y 136 LOTTT)
         setVal6('util_alicuota', alic_u);
         let util_snv_exact = sdn_exact + alic_v;
         let util_snv = round2(util_snv_exact);
@@ -341,15 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let t = diffDate(fechaIngresoEl.value, fechaEgresoEl.value);
         let reglaPerfil = (document.getElementById('regla_perfil') ? document.getElementById('regla_perfil').value : 'LOTTT_30');
 
-        let dias_adicionales_vac = 0;
-        if (t.y >= 1) {
-            if (t.m >= 6) {
-                dias_adicionales_vac = t.y;
-            } else {
-                dias_adicionales_vac = Math.max(0, t.y - 1);
-            }
-        }
-        dias_adicionales_vac = Math.min(15, dias_adicionales_vac);
+        let dias_adicionales_vac = Math.min(15, Math.max(0, t.y));
         let dias_vac_legales = 15 + dias_adicionales_vac;
         if (dias_vac_legales > 30) dias_vac_legales = 30;
 
@@ -380,9 +368,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let vac196_fraccion_dias = round2((dias_vac_legales / 12) * meses_utilidades);
         if(document.getElementById('vac196_dias')) document.getElementById('vac196_dias').value = vac196_fraccion_dias;
         
-        let fraccion_superior_6_antig = (t.m > 6) || (t.m === 6 && t.d > 0);
-        let antig_pagar = t.y + (fraccion_superior_6_antig ? 1 : 0);
-        if(document.getElementById('antig_anos')) document.getElementById('antig_anos').value = antig_pagar;
+        let mesesAntigAuto = Math.min(6, Math.max(0, t.m));
+        if(document.getElementById('antig_anos')) document.getElementById('antig_anos').value = t.y;
+        if(document.getElementById('antig_nro_meses')) document.getElementById('antig_nro_meses').value = t.m >= 6 ? 0 : t.m;
+        if(document.getElementById('antig_nro_dias')) document.getElementById('antig_nro_dias').value = mesesAntigAuto * 5;
 
         calculateAll();
 
@@ -564,4 +553,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calculateAll();
 });
-

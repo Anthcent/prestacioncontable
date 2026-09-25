@@ -223,7 +223,7 @@ include 'includes/header.php';
             </div>
             <div class="text-right">
                 <p class="text-xs font-bold text-slate-700">Fecha de Emisión: <?php echo date('d/m/Y h:i A'); ?></p>
-                <p class="text-[10px] text-slate-500">Reporte Ejecutivo de Auditoría</p>
+                <p class="text-[10px] text-slate-500">Reporte de Auditoría</p>
             </div>
         </div>
         <h1 class="text-lg font-black uppercase text-slate-900 tracking-wide mt-2">

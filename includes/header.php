@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRIME CONTADORES PÚBLICOS - Sistema de Planillas</title>
+    <title>Sistema de Cálculo de Prestaciones Sociales | PRIME</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon.png">

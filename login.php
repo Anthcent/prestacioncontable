@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="flex flex-col justify-center px-6 py-10 sm:px-12 lg:px-14 bg-white">
-                <div class="lg:hidden mb-10 flex justify-center"><img src="assets/img/logo_prime.png" alt="PRIME" class="w-52 h-auto"></div>
+                    <div class="lg:hidden mb-10 flex flex-col items-center"><img src="assets/img/logo_prime.png" alt="PRIME" class="w-52 h-auto"><p class="mt-3 text-[10px] font-bold uppercase tracking-[.16em] text-slate-500">Sistema de Cálculo de Prestaciones Sociales</p></div>
                 <div class="max-w-md w-full mx-auto">
                     <div class="flex items-center justify-between mb-8">
                         <span class="inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[.16em] text-[#0f2b48]"><span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,.12)]"></span>Sistema disponible</span>

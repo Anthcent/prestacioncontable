@@ -2,7 +2,7 @@
         
         <footer class="bg-white border-t border-slate-200 px-4 py-5 sm:py-6 mt-auto text-center text-xs sm:text-sm text-slate-700 no-print">
             <p>&copy; <?php echo date('Y'); ?> <strong class="text-slate-900">PRIME CONTADORES PÚBLICOS</strong> - Todos los derechos reservados.</p>
-            <p class="text-xs text-slate-600 font-medium mt-1">Sistema Integral de Nómina y Prestaciones Sociales</p>
+            <p class="text-xs text-slate-600 font-medium mt-1">Sistema de Cálculo de Prestaciones Sociales</p>
         </footer>
     </main> <!-- Cierra flex-1 -->
     

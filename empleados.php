@@ -16,6 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_empleado'])) {
     $categoria = trim($_POST['categoria'] ?? '');
     $fecha_ingreso = !empty($_POST['fecha_ingreso']) ? $_POST['fecha_ingreso'] : null;
 
+    if ($categoria === 'Obrero') {
+        $clase_cargo = '';
+        $nivel_num = (int)$nivel;
+        $nivel = ($nivel_num >= 1 && $nivel_num <= 10) ? (string)$nivel_num : '';
+    } else {
+        $nivel = '';
+    }
+
     if (empty($cedula) || empty($nombres) || empty($cargo)) {
         $error = "Por favor complete los campos obligatorios: Cédula, Nombres y Cargo.";
     } else {
@@ -600,25 +608,27 @@ include 'includes/header.php';
                         <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">
                             Categoría de Nómina
                         </label>
-                        <select name="categoria" id="emp_categoria" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-xs font-bold text-slate-900 transition-all cursor-pointer">
+                        <select name="categoria" id="emp_categoria" onchange="actualizarClasificacionLaboral()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-xs font-bold text-slate-900 transition-all cursor-pointer">
                             <option value="">-- No asignada --</option>
                             <option value="Empleado">Empleado</option>
                             <option value="Obrero">Obrero</option>
                         </select>
                     </div>
 
-                    <!-- Nivel -->
-                    <div>
+                    <!-- Nivel: exclusivo para obreros -->
+                    <div id="emp_nivel_wrap" class="hidden">
                         <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">
                             Nivel Jerárquico
                         </label>
-                        <input type="text" name="nivel" id="emp_nivel" placeholder="Ej: I, II, Senior, Bachiller..." 
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-xs font-bold text-slate-900 transition-all">
+                        <select name="nivel" id="emp_nivel" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-xs font-bold text-slate-900 transition-all">
+                            <option value="">-- Seleccione nivel --</option>
+                            <?php for ($nivel_op = 1; $nivel_op <= 10; $nivel_op++): ?><option value="<?php echo $nivel_op; ?>"><?php echo $nivel_op; ?></option><?php endfor; ?>
+                        </select>
                     </div>
                 </div>
 
                 <!-- Clase de Cargo -->
-                <div>
+                <div id="emp_clase_cargo_wrap">
                     <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">
                         Clase de Cargo
                     </label>
@@ -645,6 +655,18 @@ include 'includes/header.php';
 <script>
 let currentWizardStep = 1;
 
+function actualizarClasificacionLaboral() {
+    const esObrero = document.getElementById('emp_categoria')?.value === 'Obrero';
+    const nivelWrap = document.getElementById('emp_nivel_wrap');
+    const claseWrap = document.getElementById('emp_clase_cargo_wrap');
+    const nivel = document.getElementById('emp_nivel');
+    const clase = document.getElementById('emp_clase_cargo');
+    nivelWrap?.classList.toggle('hidden', !esObrero);
+    claseWrap?.classList.toggle('hidden', esObrero);
+    if (esObrero && clase) clase.value = '';
+    if (!esObrero && nivel) nivel.value = '';
+}
+
 function openNewModal() {
     document.getElementById('emp_id').value = '0';
     document.getElementById('emp_cedula').value = '';
@@ -658,6 +680,7 @@ function openNewModal() {
     document.getElementById('modalTitle').innerText = 'Registrar Nuevo Empleado';
     document.getElementById('modalHeaderIcon').className = 'fa-solid fa-user-plus';
     document.getElementById('btnSaveText').innerText = 'Guardar Empleado';
+    actualizarClasificacionLaboral();
     
     goToStep(1);
     showModal();
@@ -677,6 +700,7 @@ function openEditModal(emp) {
     document.getElementById('modalTitle').innerText = 'Editar Empleado: ' + (emp.apellidos_nombres || '');
     document.getElementById('modalHeaderIcon').className = 'fa-solid fa-user-pen';
     document.getElementById('btnSaveText').innerText = 'Actualizar Datos';
+    actualizarClasificacionLaboral();
     
     goToStep(1);
     showModal();

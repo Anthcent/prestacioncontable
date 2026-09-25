@@ -88,7 +88,7 @@ include 'includes/header.php';
             <i class="fa-solid fa-chart-pie text-brand-blue"></i> Resumen General Consolidado
         </h1>
         <p class="text-sm font-semibold text-slate-700 mt-1">
-            Panel ejecutivo de liquidaciones, control de pasivos laborales y exportación oficial
+            Panel de liquidaciones, control de pasivos laborales y exportación oficial
         </p>
     </div>
 

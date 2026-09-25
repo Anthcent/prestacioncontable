@@ -130,14 +130,7 @@ if ($id > 0) {
             $p['prima_profesionalizacion'] = $sug_init['prima_profesionalizacion'];
 
             // Días de vacaciones según tiempo de servicio (Art. 190 y 192 LOTTT)
-            $dias_adic_init = 0;
-            if ($diff_init['y'] >= 1) {
-                if ($diff_init['m'] >= 6) {
-                    $dias_adic_init = $diff_init['y'];
-                } else {
-                    $dias_adic_init = max(0, $diff_init['y'] - 1);
-                }
-            }
+            $dias_adic_init = min(15, max(0, $diff_init['y']));
             $dias_vac_legales_calc = min(30, 15 + $dias_adic_init);
             if ($p['regla_perfil'] !== 'LEGADO_120_180') {
                 $p['dias_vacaciones_alicuota'] = $dias_vac_legales_calc;
@@ -151,14 +144,7 @@ $aplicar_deducciones = isset($p['aplicar_deducciones']) ? (int)$p['aplicar_deduc
 $dias_vac_legales_sug = 15;
 if ($emp && !empty($emp['fecha_ingreso'])) {
     $diff_sug = PrestacionesCalculator::diffDate($emp['fecha_ingreso'], $p['fecha_egreso']);
-    $dias_adic_sug = 0;
-    if ($diff_sug['y'] >= 1) {
-        if ($diff_sug['m'] >= 6) {
-            $dias_adic_sug = $diff_sug['y'];
-        } else {
-            $dias_adic_sug = max(0, $diff_sug['y'] - 1);
-        }
-    }
+    $dias_adic_sug = min(15, max(0, $diff_sug['y']));
     $dias_vac_legales_sug = min(30, 15 + $dias_adic_sug);
 }
 if ($id == 0 && $emp && !empty($emp['fecha_ingreso']) && $p['regla_perfil'] !== 'LEGADO_120_180') {
@@ -779,7 +765,7 @@ include 'includes/header.php';
                             <!-- Alícuota Diaria Utilidades -->
                             <div>
                                 <label class="block text-[11px] font-semibold text-slate-500 mb-0.5">Alícuota Diaria Util.:</label>
-                                <input type="number" step="0.000001" name="alicuota_utilidades" id="alicuota_utilidades" value="<?php echo $p['alicuota_utilidades']; ?>" class="w-full p-2 border border-slate-200 bg-slate-200 text-slate-700 text-sm text-center font-mono font-bold" readonly>
+                                <input type="number" step="0.01" name="alicuota_utilidades" id="alicuota_utilidades" value="<?php echo number_format((float)$p['alicuota_utilidades'], 2, '.', ''); ?>" class="w-full p-2 border border-slate-200 bg-slate-200 text-slate-700 text-sm text-center font-mono font-bold" readonly>
                                 <div class="mt-1 text-[10px] text-slate-400 text-right">
                                     <span>(Base + Vac) / 360</span>
                                 </div>
@@ -802,7 +788,7 @@ include 'includes/header.php';
                             <!-- Alícuota Diaria Vacaciones -->
                             <div>
                                 <label class="block text-[11px] font-semibold text-slate-500 mb-0.5">Alícuota Diaria Vac.:</label>
-                                <input type="number" step="0.000001" name="alicuota_vacaciones" id="alicuota_vacaciones" value="<?php echo $p['alicuota_vacaciones']; ?>" class="w-full p-2 border border-slate-200 bg-slate-200 text-slate-700 text-sm text-center font-mono font-bold" readonly>
+                                <input type="number" step="0.01" name="alicuota_vacaciones" id="alicuota_vacaciones" value="<?php echo number_format((float)$p['alicuota_vacaciones'], 2, '.', ''); ?>" class="w-full p-2 border border-slate-200 bg-slate-200 text-slate-700 text-sm text-center font-mono font-bold" readonly>
                                 <div class="mt-1 text-[10px] text-slate-400 text-right">
                                     <span>SDN × Días / 360</span>
                                 </div>
@@ -846,7 +832,7 @@ include 'includes/header.php';
                     <input type="hidden" name="vac195_dias" id="vac195_dias" value="0">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 min-w-0 overflow-hidden">
-                            <label class="block text-[11px] font-bold text-slate-600 truncate mb-1" title="Días Utilidades (Art 131 y 132 LOTTT)">Días Utilidades (Art 131 y 132):</label>
+                            <label class="block text-[11px] font-bold text-slate-600 truncate mb-1" title="Días Utilidades (Art. 131, 132 y 136 LOTTT)">Días Utilidades (Art. 131, 132 y 136):</label>
                             <input type="number" step="0.01" name="util_dias" id="util_dias" value="<?php echo $p['util_dias']; ?>" class="w-full p-2 border border-slate-300 rounded-lg text-sm text-center font-bold min-w-0">
                         </div>
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 min-w-0 overflow-hidden">
@@ -865,13 +851,13 @@ include 'includes/header.php';
                                 <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wide truncate">Años Antigüedad:</label>
                                 <span class="text-[9px] bg-brand-blue/10 text-brand-blue px-1.5 py-0.5 rounded font-bold shrink-0 border border-brand-blue/20">30 d/año</span>
                             </div>
-                            <input type="number" step="0.01" name="antig_anos" id="antig_anos" value="<?php echo $p['antig_anos']; ?>" class="w-full p-2 border border-slate-300 rounded-lg text-sm text-center font-bold text-slate-900 bg-white shadow-2xs focus:ring-2 focus:ring-brand-blue min-w-0">
-                            <span class="text-[10px] text-slate-500 font-medium block mt-1 leading-tight">30 días/año (fracción > 6m suma +1 año)</span>
+                            <input type="number" step="0.01" name="antig_anos" id="antig_anos" value="<?php echo $p['antig_anos']; ?>" class="w-full p-2 border border-slate-200 rounded-lg text-sm text-center font-bold text-slate-900 bg-slate-100 min-w-0" readonly>
+                            <span class="text-[10px] text-slate-500 font-medium block mt-1 leading-tight">30 días por cada año completo</span>
                         </div>
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 min-w-0 overflow-hidden">
                             <label class="block text-[11px] font-bold text-slate-600 truncate mb-1">Días Antigüedad Adicionales:</label>
-                            <input type="number" step="0.01" name="antig_nro_dias" id="antig_nro_dias" value="<?php echo $p['antig_nro_dias']; ?>" class="w-full p-2 border border-slate-300 rounded-lg text-sm text-center font-bold min-w-0">
-                            <span class="text-[10px] text-slate-500 block mt-1 leading-tight">Días sueltos si aplica</span>
+                            <input type="number" step="0.01" name="antig_nro_dias" id="antig_nro_dias" value="<?php echo $p['antig_nro_dias']; ?>" class="w-full p-2 border border-slate-200 rounded-lg text-sm text-center font-bold bg-slate-100 min-w-0" readonly>
+                            <span class="text-[10px] text-slate-500 block mt-1 leading-tight">5 días por mes; máximo 30 días</span>
                         </div>
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 min-w-0 overflow-hidden">
                             <label class="block text-[11px] font-bold text-slate-600 truncate mb-1">Intereses por Antigüedad (Bs.):</label>
@@ -1184,7 +1170,7 @@ include 'includes/header.php';
                     <td class="font-bold text-center bg-gray-100">Total</td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="font-bold">Articulo 131 y 132 LOTTT</td>
+                    <td colspan="3" class="font-bold">Articulo 131, 132 y 136 LOTTT</td>
                     <td class="text-center font-bold" id="pv_util_alic">0,0000</td>
                     <td class="text-center font-bold" id="pv_util_dias">0,00</td>
                     <td class="text-right font-bold" id="pv_util_snv">0,00</td>
@@ -1858,7 +1844,7 @@ function formatVE(num) {
 }
 function formatVE4(num) {
     let val = parseFloat(num) || 0;
-    return val.toLocaleString('es-VE', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    return val.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function syncPreviewTab() {
@@ -1904,7 +1890,7 @@ function syncPreviewTab() {
     setT('pv_dias_vac', getV('dias_vacaciones_alicuota'));
     setT('pv_alic_vac', formatVE4(getV('alicuota_vacaciones')));
 
-    // Utilidades (Art. 131 y 132)
+    // Utilidades (Art. 131, 132 y 136)
     setT('pv_util_alic', formatVE4(getV('util_alicuota')));
     setT('pv_util_dias', formatVE(getV('util_dias')));
     setT('pv_util_snv', formatVE(getV('util_salario_normal_vac')));
@@ -2068,9 +2054,9 @@ function simularAlicuotasEnModal() {
 
     // Fórmulas oficiales Excel Gobernación (D29 y D27)
     // 1. Alícuota Vacacional: (Sueldo Normal Diario * Días Vac) / 360
-    const alic_v = (sdn_exact * dv) / 360;
+    const alic_v = Math.round(((sdn_exact * dv) / 360) * 100) / 100;
     // 2. Alícuota Utilidades: ((Sueldo Normal Diario + Alícuota Vacacional) * Días Util) / 360
-    const alic_u = ((sdn_exact + alic_v) * du) / 360;
+    const alic_u = Math.round((((sdn_exact + alic_v) * du) / 360) * 100) / 100;
     const total_alic = alic_v + alic_u;
 
     const sim = smn + (alic_u * 30) + (alic_v * 30);

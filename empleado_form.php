@@ -27,6 +27,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nivel = trim($_POST['nivel']);
     $categoria = trim($_POST['categoria']);
     $fecha_ingreso = empty($_POST['fecha_ingreso']) ? null : $_POST['fecha_ingreso'];
+
+    if ($categoria === 'Obrero') {
+        $clase_cargo = '';
+        $nivel_num = (int)$nivel;
+        $nivel = ($nivel_num >= 1 && $nivel_num <= 10) ? (string)$nivel_num : '';
+    } else {
+        $nivel = '';
+    }
     
     try {
         if($id > 0) {
@@ -72,7 +80,7 @@ include 'includes/header.php';
 <form method="POST" action="" class="glass-card rounded-xl p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto shadow-sm">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Fila 1 -->
-        <div class="space-y-2">
+        <div id="clase_cargo_wrap" class="space-y-2 <?php echo $emp['categoria'] === 'Obrero' ? 'hidden' : ''; ?>">
             <label class="block text-sm font-medium text-slate-700">Cédula de Identidad *</label>
             <input type="text" name="cedula" value="<?php echo htmlspecialchars($emp['cedula']); ?>" required 
                 class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all">
@@ -98,16 +106,18 @@ include 'includes/header.php';
                 class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all">
         </div>
         
-        <div class="space-y-2">
+        <div id="nivel_wrap" class="space-y-2 <?php echo $emp['categoria'] === 'Obrero' ? '' : 'hidden'; ?>">
             <label class="block text-sm font-medium text-slate-700">Nivel</label>
-            <input type="text" name="nivel" value="<?php echo htmlspecialchars($emp['nivel']); ?>" 
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all">
+            <select name="nivel" id="nivel" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white">
+                <option value="">-- Seleccione nivel --</option>
+                <?php for ($nivel_op = 1; $nivel_op <= 10; $nivel_op++): ?><option value="<?php echo $nivel_op; ?>" <?php echo (string)$emp['nivel'] === (string)$nivel_op ? 'selected' : ''; ?>><?php echo $nivel_op; ?></option><?php endfor; ?>
+            </select>
         </div>
         
         <!-- Fila 4 -->
         <div class="space-y-2">
             <label class="block text-sm font-medium text-slate-700">Categoría</label>
-            <select name="categoria" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white">
+            <select name="categoria" id="categoria" onchange="actualizarClasificacion()" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white">
                 <option value="" <?php echo $emp['categoria'] == '' ? 'selected' : ''; ?>>-- Seleccione --</option>
                 <option value="Obrero" <?php echo $emp['categoria'] == 'Obrero' ? 'selected' : ''; ?>>Obrero</option>
                 <option value="Empleado" <?php echo $emp['categoria'] == 'Empleado' ? 'selected' : ''; ?>>Empleado</option>
@@ -128,5 +138,15 @@ include 'includes/header.php';
         </button>
     </div>
 </form>
+
+<script>
+function actualizarClasificacion() {
+    const esObrero = document.getElementById('categoria').value === 'Obrero';
+    document.getElementById('nivel_wrap').classList.toggle('hidden', !esObrero);
+    document.getElementById('clase_cargo_wrap').classList.toggle('hidden', esObrero);
+    if (esObrero) document.querySelector('[name="clase_cargo"]').value = '';
+    else document.getElementById('nivel').value = '';
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>

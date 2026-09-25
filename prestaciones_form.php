@@ -47,11 +47,6 @@ if ($id > 0 && $empleado_id == 0) {
     }
 }
 
-// Si no hay empleado seleccionado pero hay empleados en la base de datos, tomar el primero
-if ($empleado_id == 0 && count($empleados_list) > 0 && $id == 0) {
-    $empleado_id = (int)$empleados_list[0]['id'];
-}
-
 $emp = null;
 if ($empleado_id > 0) {
     $stmt = $pdo->prepare("SELECT * FROM empleados WHERE id = ?");
@@ -205,17 +200,56 @@ if (!$found_motivo && !empty($current_motivo)) {
 
 // Procesar formulario al guardar
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guardar_planilla'])) {
-    $empleado_id = (int)$_POST['empleado_id'];
+    $empleado_id = isset($_POST['empleado_id']) ? (int)$_POST['empleado_id'] : 0;
+    $crear_trabajador = ($_POST['crear_trabajador'] ?? '0') === '1';
     $motivo = trim($_POST['motivo']);
     $fecha_calculo = $_POST['fecha_calculo'];
     $fecha_egreso = $_POST['fecha_egreso'];
     $regla_perfil = $_POST['regla_perfil'] ?? 'LOTTT_30';
 
-    if (!$emp) {
+    if (!$crear_trabajador && $empleado_id > 0) {
+        $stmt_emp = $pdo->prepare("SELECT * FROM empleados WHERE id = ?");
+        $stmt_emp->execute([$empleado_id]);
+        $emp = $stmt_emp->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if ($crear_trabajador) {
+        $categoria_nueva = trim($_POST['nuevo_categoria'] ?? '');
+        $emp = [
+            'cedula' => trim($_POST['nuevo_cedula'] ?? ''),
+            'apellidos_nombres' => mb_convert_case(trim($_POST['nuevo_apellidos_nombres'] ?? ''), MB_CASE_TITLE, 'UTF-8'),
+            'cargo' => trim($_POST['nuevo_cargo'] ?? ''),
+            'clase_cargo' => $categoria_nueva === 'Obrero' ? '' : trim($_POST['nuevo_clase_cargo'] ?? ''),
+            'nivel' => $categoria_nueva === 'Obrero' ? trim($_POST['nuevo_nivel'] ?? '') : '',
+            'categoria' => $categoria_nueva,
+            'fecha_ingreso' => trim($_POST['fecha_ingreso'] ?? '')
+        ];
+    }
+
+    if (!$crear_trabajador && !$emp) {
         $error = "Debe seleccionar un empleado válido.";
+    } elseif ($crear_trabajador && (empty($emp['cedula']) || empty($emp['apellidos_nombres']) || empty($emp['cargo']) || empty($emp['fecha_ingreso']))) {
+        $error = "Complete la cédula, nombres y apellidos, cargo y fecha de ingreso del nuevo trabajador.";
+    } elseif ($crear_trabajador && $emp['categoria'] === 'Obrero' && ((int)$emp['nivel'] < 1 || (int)$emp['nivel'] > 10)) {
+        $error = "Seleccione un nivel entre 1 y 10 para el trabajador obrero.";
     } elseif (!empty($emp['fecha_ingreso']) && !empty($fecha_egreso) && strtotime($fecha_egreso) < strtotime($emp['fecha_ingreso'])) {
         $error = "Error: La fecha de egreso no puede ser anterior a la fecha de ingreso (" . date('d/m/Y', strtotime($emp['fecha_ingreso'])) . ").";
     } else {
+        if ($crear_trabajador) {
+            try {
+                $pdo->beginTransaction();
+                $stmt_nuevo = $pdo->prepare("INSERT INTO empleados (cedula, apellidos_nombres, cargo, clase_cargo, nivel, categoria, fecha_ingreso) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt_nuevo->execute([$emp['cedula'], $emp['apellidos_nombres'], $emp['cargo'], $emp['clase_cargo'], $emp['nivel'], $emp['categoria'], $emp['fecha_ingreso']]);
+                $empleado_id = (int)$pdo->lastInsertId();
+            } catch (PDOException $e) {
+                if ($pdo->inTransaction()) $pdo->rollBack();
+                $error = isset($e->errorInfo[1]) && (int)$e->errorInfo[1] === 1062
+                    ? "La cédula indicada ya pertenece a otro trabajador. Selecciónelo en la lista."
+                    : "No fue posible registrar al trabajador: " . $e->getMessage();
+            }
+        }
+
+        if (!isset($error)) {
         $inputs = $_POST;
         $inputs['fecha_ingreso'] = $emp['fecha_ingreso'];
         $inputs['aplicar_deducciones'] = isset($_POST['aplicar_deducciones']) ? 1 : 0;
@@ -287,8 +321,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guardar_planilla'])) {
             $id = $pdo->lastInsertId();
         }
 
+        if ($pdo->inTransaction()) $pdo->commit();
         header("Location: prestaciones_view.php?id=" . $id);
         exit;
+        }
     }
 }
 
@@ -356,11 +392,6 @@ include 'includes/header.php';
             </p>
         </div>
 
-        <div class="flex items-center gap-3">
-            <a href="empleado_form.php" class="bg-brand-yellow hover:bg-yellow-400 text-brand-dark font-bold px-4 py-2.5 rounded-xl shadow text-xs transition-all flex items-center gap-2">
-                <i class="fa-solid fa-user-plus"></i> + Registrar Nuevo Empleado
-            </a>
-        </div>
     </div>
 </div>
 
@@ -374,8 +405,8 @@ include 'includes/header.php';
 <?php endif; ?>
 
 <form method="POST" id="form-prestaciones" action="prestaciones_form.php?id=<?php echo $id; ?>&empleado_id=<?php echo $empleado_id; ?>">
-    <input type="hidden" name="empleado_id" value="<?php echo $empleado_id; ?>">
-    <input type="hidden" id="fecha_ingreso" value="<?php echo htmlspecialchars($emp['fecha_ingreso'] ?? ''); ?>">
+    <input type="hidden" name="empleado_id" id="empleado_id" value="<?php echo $empleado_id; ?>">
+    <input type="hidden" name="crear_trabajador" id="crear_trabajador" value="<?php echo (!empty($crear_trabajador)) ? '1' : '0'; ?>">
     <input type="hidden" id="emp_cargo" value="<?php echo htmlspecialchars($emp['cargo'] ?? ''); ?>">
     <input type="hidden" id="emp_clase_cargo" value="<?php echo htmlspecialchars($emp['clase_cargo'] ?? ''); ?>">
     <input type="hidden" id="emp_categoria" value="<?php echo htmlspecialchars($emp['categoria'] ?? ''); ?>">
@@ -408,7 +439,7 @@ include 'includes/header.php';
             <div id="card_empleado_regla" class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200/80 relative z-30">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                     <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-user-check text-brand-blue"></i> 1. Empleado y Regla de Cálculo
+                        <i class="fa-solid fa-user-check text-brand-blue"></i> 1. Trabajador y Regla de Cálculo
                     </h3>
                     <span class="text-xs bg-blue-50 text-brand-blue font-bold px-3 py-1 rounded-full">Reutilización Automática</span>
                 </div>
@@ -416,13 +447,57 @@ include 'includes/header.php';
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Seleccionar Trabajador:</label>
-                        <select onchange="window.location.href='prestaciones_form.php?empleado_id='+this.value+'&regla_perfil=<?php echo $p['regla_perfil']; ?>';" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none bg-slate-50 font-bold text-slate-800 text-sm">
+                        <select id="selector_trabajador" onchange="cambiarTrabajador(this.value)" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none bg-slate-50 font-bold text-slate-800 text-sm">
+                            <option value="" <?php echo $empleado_id === 0 && empty($crear_trabajador) ? 'selected' : ''; ?>>— Seleccione un trabajador —</option>
+                            <option value="nuevo" <?php echo !empty($crear_trabajador) ? 'selected' : ''; ?>>＋ Agregar un nuevo trabajador</option>
                             <?php foreach ($empleados_list as $e_item): ?>
                                 <option value="<?php echo $e_item['id']; ?>" <?php echo ($e_item['id'] == $empleado_id) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($e_item['cedula']) . " — " . htmlspecialchars($e_item['apellidos_nombres']) . " (" . htmlspecialchars($e_item['cargo']) . ")"; ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <p class="mt-2 text-xs text-slate-500">Puede seleccionar un trabajador registrado o crearlo sin salir de esta liquidación.</p>
+                    </div>
+
+                    <div id="nuevo_trabajador_panel" class="md:col-span-2 <?php echo !empty($crear_trabajador) ? '' : 'hidden'; ?> rounded-2xl border border-blue-200 bg-blue-50/60 p-4 sm:p-5">
+                        <div class="flex items-center gap-2 mb-4 text-brand-blue">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <h4 class="text-sm font-extrabold">Datos del nuevo trabajador</h4>
+                            <span class="ml-auto text-[10px] font-bold uppercase tracking-wider bg-white border border-blue-200 px-2 py-1 rounded-full">Se guardará con la liquidación</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Cédula *</label>
+                                <input type="text" name="nuevo_cedula" value="<?php echo htmlspecialchars($_POST['nuevo_cedula'] ?? ''); ?>" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-brand-blue outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Apellidos y Nombres *</label>
+                                <input type="text" name="nuevo_apellidos_nombres" value="<?php echo htmlspecialchars($_POST['nuevo_apellidos_nombres'] ?? ''); ?>" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-brand-blue outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Cargo *</label>
+                                <input type="text" name="nuevo_cargo" value="<?php echo htmlspecialchars($_POST['nuevo_cargo'] ?? ''); ?>" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-brand-blue outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Categoría</label>
+                                <select name="nuevo_categoria" id="nuevo_categoria" onchange="actualizarClasificacionNueva()" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white">
+                                    <option value="">— Seleccione —</option>
+                                    <option value="Empleado" <?php echo ($_POST['nuevo_categoria'] ?? '') === 'Empleado' ? 'selected' : ''; ?>>Empleado</option>
+                                    <option value="Obrero" <?php echo ($_POST['nuevo_categoria'] ?? '') === 'Obrero' ? 'selected' : ''; ?>>Obrero</option>
+                                </select>
+                            </div>
+                            <div id="nuevo_clase_wrap">
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Clase de Cargo</label>
+                                <input type="text" name="nuevo_clase_cargo" value="<?php echo htmlspecialchars($_POST['nuevo_clase_cargo'] ?? ''); ?>" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white">
+                            </div>
+                            <div id="nuevo_nivel_wrap" class="hidden">
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Nivel *</label>
+                                <select name="nuevo_nivel" class="nuevo-trabajador-campo w-full p-2.5 border border-slate-300 rounded-xl bg-white">
+                                    <option value="">— Seleccione —</option>
+                                    <?php for ($nivel_op = 1; $nivel_op <= 10; $nivel_op++): ?><option value="<?php echo $nivel_op; ?>" <?php echo (string)($_POST['nuevo_nivel'] ?? '') === (string)$nivel_op ? 'selected' : ''; ?>><?php echo $nivel_op; ?></option><?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <?php if ($emp): ?>
@@ -529,7 +604,7 @@ include 'includes/header.php';
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Fecha de Ingreso:</label>
-                        <input type="date" value="<?php echo htmlspecialchars($emp['fecha_ingreso'] ?? ''); ?>" id="fecha_ingreso" class="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold" readonly>
+                        <input type="date" name="fecha_ingreso" value="<?php echo htmlspecialchars($_POST['fecha_ingreso'] ?? ($emp['fecha_ingreso'] ?? '')); ?>" id="fecha_ingreso" class="w-full p-2.5 border rounded-xl text-slate-700 text-sm font-bold <?php echo !empty($crear_trabajador) ? 'border-slate-300 bg-white focus:ring-2 focus:ring-brand-blue outline-none' : 'border-slate-200 bg-slate-100'; ?>" <?php echo !empty($crear_trabajador) ? '' : 'readonly'; ?>>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Fecha de Egreso:</label>
@@ -1533,6 +1608,71 @@ include 'includes/header.php';
 </div>
 
 <script class="no-print">
+function cambiarTrabajador(valor) {
+    const panel = document.getElementById('nuevo_trabajador_panel');
+    const empleadoId = document.getElementById('empleado_id');
+    const crear = document.getElementById('crear_trabajador');
+    const fechaIngreso = document.getElementById('fecha_ingreso');
+
+    if (valor === 'nuevo') {
+        empleadoId.value = '0';
+        crear.value = '1';
+        panel.classList.remove('hidden');
+        fechaIngreso.readOnly = false;
+        fechaIngreso.classList.remove('bg-slate-100', 'border-slate-200');
+        fechaIngreso.classList.add('bg-white', 'border-slate-300');
+        document.querySelectorAll('.nuevo-trabajador-campo').forEach(campo => campo.disabled = false);
+        actualizarClasificacionNueva();
+        panel.querySelector('input')?.focus();
+        return;
+    }
+
+    if (valor) {
+        window.location.href = 'prestaciones_form.php?empleado_id=' + encodeURIComponent(valor) + '&regla_perfil=<?php echo rawurlencode($p['regla_perfil']); ?>';
+        return;
+    }
+
+    empleadoId.value = '0';
+    crear.value = '0';
+    panel.classList.add('hidden');
+    fechaIngreso.value = '';
+    fechaIngreso.readOnly = true;
+    document.querySelectorAll('.nuevo-trabajador-campo').forEach(campo => campo.disabled = true);
+}
+
+function actualizarClasificacionNueva() {
+    const categoria = document.getElementById('nuevo_categoria');
+    if (!categoria) return;
+    const esObrero = categoria.value === 'Obrero';
+    document.getElementById('nuevo_nivel_wrap')?.classList.toggle('hidden', !esObrero);
+    document.getElementById('nuevo_clase_wrap')?.classList.toggle('hidden', esObrero);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const esNuevo = document.getElementById('crear_trabajador')?.value === '1';
+    document.querySelectorAll('.nuevo-trabajador-campo').forEach(campo => campo.disabled = !esNuevo);
+    actualizarClasificacionNueva();
+
+    const enlacesVistaPrevia = {
+        nuevo_apellidos_nombres: 'pv_apellidos_nombres',
+        nuevo_cedula: 'pv_cedula',
+        nuevo_cargo: 'pv_cargo',
+        nuevo_clase_cargo: 'pv_clase_cargo',
+        nuevo_nivel: 'pv_nivel',
+        nuevo_categoria: 'pv_categoria'
+    };
+    Object.entries(enlacesVistaPrevia).forEach(([nombre, destino]) => {
+        const campo = document.querySelector(`[name="${nombre}"]`);
+        campo?.addEventListener('input', function () {
+            const salida = document.getElementById(destino);
+            if (salida) salida.textContent = this.value;
+            if (nombre === 'nuevo_cargo') document.getElementById('emp_cargo').value = this.value;
+            if (nombre === 'nuevo_clase_cargo') document.getElementById('emp_clase_cargo').value = this.value;
+            if (nombre === 'nuevo_categoria') document.getElementById('emp_categoria').value = this.value;
+        });
+    });
+});
+
 // ==========================================
 // GESTIÓN DEL SELECT INTERACTIVO DE MOTIVOS
 // ==========================================
